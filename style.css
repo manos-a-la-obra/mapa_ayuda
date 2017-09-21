@@ -11,7 +11,23 @@ body { margin: 0; }
 .leftColumn { margin-bottom: .5em; }
 
 .title_banner {
-    margin: 20;
+    color: white;
+    padding: 20;
+    background-image: url("fondo.JPG");
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;    
+}
+
+.title_banner a:link, .title_banner a:visited {
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 1.4em;
+  color: #ff783a;
+}
+
+.title_banner a:hover {
+  color: white;
 }
 
 .nav {
