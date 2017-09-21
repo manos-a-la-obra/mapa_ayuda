@@ -2,7 +2,7 @@
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 
-body { margin: 0; }
+body { margin: 0; background-color: #f2f2f2; }
 
 .columnsContainer, footer, header { position: relative; margin: .5em; }
 
@@ -25,7 +25,7 @@ body { margin: 0; }
   font-size: 1.4em;
   color: #ff783a;
 }
-
+    
 .title_banner a:hover {
   color: white;
 }
@@ -67,7 +67,19 @@ body { margin: 0; }
 
 /* MEDIA QUERIES */
 @media screen and (min-width: 47.5em ) {
-  .leftColumn { margin-right: 19.5em; }
+  .leftColumn { 
+    margin-right: 19.5em;
+  }
 
-	.rightColumn { position: absolute; top: 0; right: 0; width: 18.75em; }   
+	.rightColumn { 
+    color: #2F4F4F;
+    position: absolute;
+    top: 0;
+    right: 0; 
+    width: 18.75em; 
+  }   
+
+  footer {
+    color: #708090;
+  }
 }
