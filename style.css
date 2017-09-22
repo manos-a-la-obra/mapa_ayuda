@@ -11,13 +11,26 @@ body { margin: 0; background-color: #f2f2f2; }
 .leftColumn { margin-bottom: .5em; }
 
 .title_banner {
-    color: white;
     padding: 20;
+    color: white;
     background-image: url("fondo.JPG");
     background-color: #404040;
     background-size:     cover;                      /* <------ */
     background-repeat:   no-repeat;
     background-position: center center;    
+}
+
+.header img {
+  padding: 20;
+  float: left;
+  width: 150px;
+  height: 150px;
+}
+
+.header h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
 }
 
 .title_banner a:link, .title_banner a:visited {
