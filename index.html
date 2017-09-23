@@ -1,70 +1,257 @@
 <html>
-	<head>
-		<meta charset="utf-8">
+  <head>
+
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <title>Manos a la Obra</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    
   </head>
   
   <body>
-    <div class="header">
-      <a target="_blank" href="https://www.facebook.com/manosalaobrasismo/"><img src="logo.jpeg" alt="logo" /> </a>
-      <div class="title_banner">
-        <h1><b>Manos a la Obra</b></h1>
-        <h4>Coordinación de ayuda para el sismo en México, 19 de Septiembre 2017</h4>
-        <h3> <a target="_blank" href="https://tinyurl.com/ayudasismo2017">Pide/ofrece ayuda - click aquí</a> || <a target="_blank" href="https://tinyurl.com/sismo2017ayudadatos">Base de datos - click aquí</a></h3>
-        <p>Por favor llena la encuesta con tus datos y la ayuda que necesitas o puedes ofrecer.¡Ayúdanos a compartir ayuda!</p>
-      </div>
-    <div>
-  	<div class="columnsContainer">
-      <div class="leftColumn">
-        <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#ofrezco">Ofrezco</a></li>
-          <li><a data-toggle="tab" href="#necesito">Necesito</a></li>
-        </ul>
 
-        <div class="tab-content">
-          <h2>Mapa</h2>
-          <p>Da click en los puntos para explorar la información.</p>
-          <div id="ofrezco" class="tab-pane fade in active">
-            <iframe width="100%" height="60%" scrolling="no" frameborder="no" src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;h=false&amp;lat=30.500628993707927&amp;lng=-98.98420925000005&amp;t=1&amp;z=4&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+    <div class="jumbotron-wrapper">
+    <div class="jumbotron">
+      
+      <a href="https://www.facebook.com/manosalaobrasismo/">
+        <img src="logo.jpeg" alt="logo" class="logo" />
+      </a>
+
+      <h1 class="display-3 text-white">
+        <b>Manos a la Obra</b>
+      </h1>
+      
+      <p class="lead text-white">Coordinación de ayuda para el sismo en México, 19 de Septiembre 2017.</p>
+      
+      <hr class="my-4">
+      
+      <p class="text-white">Utilice estos enlaces rápidos. Por favor llena la encuesta con tus datos y la ayuda que necesitas o puedes ofrecer. ¡Ayúdanos a compartir ayuda!</p>
+      
+      <p class="lead text-center">
+
+        <a class="btn btn-primary btn-lg border"
+           href="https://tinyurl.com/ayudasismo2017"
+           role="button">Pide o ofrece ayuda</a>
+
+      </p>
+
+      <p class="lead text-center">
+
+        <a class="btn btn-primary btn-lg border"
+           href="https://tinyurl.com/sismo2017ayudadatos"
+           role="button">Base de datos de los encuestados</a>
+      
+      </p>
+
+    </div>
+    </div>
+
+    <div class="container-fluid">
+
+      <div class="row">
+
+        <div class="col-md-8">
+
+          <ul class="nav nav-tabs" id="offerOrNeed" role="tablist">
+            
+            <li class="nav-item">
+              <a class="nav-link active"
+                 id="ofrezco-tab"
+                 data-toggle="tab"
+                 href="#ofrezco"
+                 role="tab"
+                 aria-controls="ofrezco"
+                 aria-expanded="true">Ofrezco</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link"
+                 id="necesito-tab"
+                 data-toggle="tab"
+                 href="#necesito"
+                 role="tab"
+                 aria-controls="necesito">Necesito</a>
+            </li>
+          
+          </ul>
+
+          <div class="tab-content" id="offerOrNeedContent">
+            
+            <div class="tab-pane fade show active"
+                 id="ofrezco"
+                 role="tabpanel"
+                 aria-labelledby="ofrezco-tab">
+
+              <div class="card border-top-0 rounded-0 rounded-bottom">
+                
+                <div class="card-body">
+
+                  <iframe width="100%"
+                          height="90%"
+                          scrolling="no"
+                          frameborder="no"
+                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;h=false&amp;lat=30.500628993707927&amp;lng=-98.98420925000005&amp;t=1&amp;z=4&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+
+                </div>
+          
+              </div>
+
+            </div>
+            
+            <div class="tab-pane fade"
+                 id="necesito"
+                 role="tabpanel"
+                 aria-labelledby="necesito-tab">
+              
+              <div class="card border-top-0 rounded-0 rounded-bottom">
+                
+                <div class="card-body">
+
+                  <iframe width="100%"
+                          height="90%"
+                          scrolling="no"
+                          frameborder="no"
+                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;h=false&amp;lat=30.500628993707927&amp;lng=-98.98420925000005&amp;t=1&amp;z=4&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+
+                </div>
+          
+              </div>
+
+            </div>
+
           </div>
-          <div id="necesito" class="tab-pane fade">
-            <iframe width="100%" height="60%" scrolling="no" frameborder="no" src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;h=false&amp;lat=30.500628993707927&amp;lng=-98.98420925000005&amp;t=1&amp;z=4&amp;l=col17&amp;y=4&amp;tmplt=4&amp;hml=TWO_COL_LAT_LNG"></iframe>
-          </div>
+        
         </div>
+        
+        <div class="col-md-4">
+
+          <!-- TODO: Hack to make this card start at 
+                     same vertical align as maps card -->
+          <div style="height:41px"></div>
+          
+          <div class="card" id="sideInfoCard">
+            
+            <div class="card-body">
+            
+              <h4 class="card-title">
+                ¿No sabes qué hacer? ¡Ayúdanos!
+              </h4>
+            
+              <p class="card-text">
+                Busca gente que necesita ayuda en la base de datos que está cerca de ti. Ayúdalos.
+              </p>
+            
+              <p class="card-text">
+                Si sabes de algún grupo real que necesite ayuda, añádelo a la base de datos. Responde Necesito a la primera pregunta y añade los datos de contacto de la organización.
+              </p>
+            
+              <p class="card-text">
+                Mucha gente que necesita ayuda no tiene manera de informar a los demás. Por favor contáctalos con los voluntarios en la lista.
+              </p>
+            
+              <p class="card-text">
+                Contacta con la gente pidiendo ayuda fuera de las grandes ciudades. Ellos no están recibiendo tanta atención.
+              </p>
+            
+              <p class="card-text">
+                Recuerda que esta información no sirve de nada si no nos conectamos y llevamos la ayuda a quien la necesite.
+              </p>
+            
+              <a href="https://www.facebook.com/manosalaobrasismo/"
+                 class="btn btn-primary btn-block">
+
+                <!-- TODO: Image embed is a hack -->
+                <img src="http://www.entypo.com/images/facebook.svg"
+                     style="height: 25px">
+               Manos a la Obra
+             </a>
+            
+            </div>
+          
+          </div>
+        
+        </div>
+      
       </div>
-
-	  	<div class="rightColumn">
-        <h4>¿No sabes qué hacer? ¡Ayúdanos!</h4>
-        <ul>
-          <li>Difunde esta lista.</li>
-          <li>Busca gente que necesita ayuda en la base de datos que está cerca de ti. Ayúdalos.</li>
-          <li>Si sabes de algún grupo real que necesite ayuda, añádelo a la base de datos. Responde Necesito a la primera pregunta y añade los datos de contacto de la organización.</li>
-          <li>Mucha gente que necesita ayuda no tiene manera de informar a los demás. Por favor contáctalos con los voluntarios en la lista.</li>
-          <li>Contacta con la gente pidiendo ayuda fuera de las grandes ciudades. Ellos no están recibiendo tanta atención</li>
-          <li>Organízate con la gente que está cerca de ti en la lista.</li>
-        </ul>
-        <p>Recuerda que esta información no sirve de nada si no nos conectamos y llevamos la ayuda a quien la necesite.</p>
-        <p>¡Gracias!</p>
-	  	</div>
-  	</div>
     
-    <footer>
-      <p>Somos un grupo de estudiantes mexicanos de MIT y Harvard. Creamos esta base de datos para conectar ayuda después del sismo. </p>
-      <p>Creamos este mapa y una tabla para explorar los datos para que puedas buscar mejor a gente que esté cerca de ti ofreciendo lo que necesitas.</p>
-  		<p>Si quieres ayudarnos a organizar y distribuir la ayuda o tienes alguna duda, únete a <a target="_blank" href="https://www.facebook.com/groups/494018237616873/">este grupo.</a></p>
-  		<p>2017</p>
-  	</footer>
+    </div>
 
-  <script type="text/javascript">
+    <div class="container-fluid">
+      
+      <div class="card border-0">
+        
+        <div class="card-body">
+          
+          <p class="card-text small">
+            Somos un grupo de estudiantes mexicanos de MIT y Harvard. Creamos esta base de datos para conectar ayuda después del sismo.
+          </p>
+          
+          <p class="card-text small">
+            Creamos este mapa y una tabla para explorar los datos para que puedas buscar mejor a gente que esté cerca de ti ofreciendo lo que necesitas.
+          </p>
+          
+          <p class="card-text small">
+            Si quieres ayudarnos a organizar y distribuir la ayuda o tienes alguna duda, únete a <a href="https://www.facebook.com/groups/494018237616873/">este grupo</a>.
+          </p>
 
-  </script>>
+          <p class="card-text small">
+            2017
+          </p>
+          
+        </div>
+      
+      </div>
+    
+    </div>
+    
+    <!-- JS library imports at end so page loads faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      /*!
+       * IE10 viewport hack for Surface/desktop Windows 8 bug
+       * Copyright 2014-2017 The Bootstrap Authors
+       * Copyright 2014-2017 Twitter, Inc.
+       * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+       */
+
+      // See the Getting Started docs for more information:
+      // https://getbootstrap.com/getting-started/#support-ie10-width
+
+      (function () {
+        'use strict'
+
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+          var msViewportStyle = document.createElement('style')
+          msViewportStyle.appendChild(
+            document.createTextNode(
+              '@-ms-viewport{width:auto!important}'
+            )
+          )
+          document.head.appendChild(msViewportStyle)
+        }
+
+      }())
+
+      // TODO: This is a hack, can it be resolved in CSS?
+      // Adjust maximum map div height to match left card's height
+      (function () {
+        var sideChartHeight = $('#sideInfoCard').height();
+
+        // Use the smaller of these two options
+        var useHeight = sideChartHeight > 900 ? 900: sideChartHeight;
+
+        $('#offerOrNeedContent').height(useHeight + 26);
+      }())
+    </script>
+
   </body>
 </html>
