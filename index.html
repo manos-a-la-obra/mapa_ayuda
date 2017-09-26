@@ -9,7 +9,11 @@
     <title>Manos a la Obra</title>
 
     <!-- CSS Imports -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
     
   </head>
@@ -136,10 +140,22 @@
         
         <div class="col-md-4">
 
-          <!-- TODO: Hack to make this card start at 
-                     same vertical align as maps card -->
-          <div style="height:41px"></div>
-          
+          <div class="input-group"
+               id="searchBarComponent">
+
+            <span class="input-group-addon" id="sizing-addon1">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            
+            <input type="text"
+                  class="form-control"
+                  placeholder="buscar..."
+                  aria-describedby="sizing-addon1">
+
+          </div>
+
+          <br>
+              
           <div class="card" id="sideInfoCard">
             
             <div class="card-body">
@@ -175,9 +191,7 @@
               <a class="btn btn-primary btn-block"
                  target="_blank" 
                  href="https://www.facebook.com/sharer/sharer.php?u=http://manosalaobrasismo.mx/">
-                <!-- TODO: Image embed is a hack -->
-                <img src="http://www.entypo.com/images/facebook.svg"
-                     style="height: 25px">
+               <i class="fa fa-facebook-official fa-lg" aria-hidden="true"></i>
                Compartir Manos a la Obra
              </a>
             
@@ -185,9 +199,7 @@
                  target="_blank" 
                  href="https://twitter.com/home?status=Manos%20a%20la%20Obra%3A%20Coordinaci%C3%B3n%20de%20ayuda%20para%20el%20sismo%20en%20M%C3%A9xico%20http%3A//www.manosalaobrasismo.mx%20%23manosalaobra">
 
-                <!-- TODO: Image embed is a hack -->
-                <img src="http://www.entypo.com/images/twitter.svg"
-                     style="height: 25px">
+               <i class="fa fa-twitter fa-lg" aria-hidden="true"></i>
                Tweet Manos a la Obra
              </a>
             
@@ -242,9 +254,16 @@
     </div>
     
     <!-- JS library imports at end so page loads faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" 
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
 
     <script type="text/javascript">
       /*!
@@ -256,7 +275,6 @@
 
       // See the Getting Started docs for more information:
       // https://getbootstrap.com/getting-started/#support-ie10-width
-
       (function () {
         'use strict'
 
@@ -270,18 +288,65 @@
           document.head.appendChild(msViewportStyle)
         }
 
-      }())
+      }());
 
-      // TODO: This is a hack, can it be resolved in CSS?
-      // Adjust maximum map div height to match left card's height
       (function () {
+        // TODO: This is a hack, can it be resolved in CSS?
+        // Adjust maximum map div height to match left card's height
         var sideChartHeight = $('#sideInfoCard').height();
-
         // Use the smaller of these two options
-        var useHeight = sideChartHeight > 900 ? 900: sideChartHeight;
+        var useHeight = sideChartHeight > 900 ? 900 : sideChartHeight;
+        $('#offerOrNeedContent').height(useHeight + 50);
 
-        $('#offerOrNeedContent').height(useHeight + 26);
-      }())
+        var dataUrl = 'https://spreadsheets.google.com/feeds/list/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/1/public/values?alt=json';
+
+        $.get(dataUrl)
+          .then(function(response) {
+            console.log(response);
+            // Skip the first few entries which are the headers
+            var entries = response.feed.entry.slice(3,);
+            entries = entries.map(function (ea) {
+              return {
+                // Location aspects
+                'address': ea.gsx$addressbot.$t,
+                'ciudad': ea.gsx$ciudad.$t,
+                'colonia': ea.gsx$colonia.$t,
+                'municipality': ea.gsx$delegaciónmunicipio.$t,
+                'estado': ea.gsx$estado.$t,
+                'postal': ea.gsx$códigopostal.$t,
+
+                // Attempted
+
+                // Social aspects
+                'facebook': ea.gsx$facebookpontuhandleounlinkrecuerdaquemuchosnombresestánrepetidosenfacebook.$t,
+                'twitter': ea.gsx$twitter.$t,
+
+                // Identification
+                'nombre': ea.gsx$nombresieresmiembrodeunaorganizacióntambiénponsunombre.$t,
+
+                // Offering or receiving
+                'needsHelp': (ea.gsx$ofrezconecesito.$t !== 'Ofrezco'),
+                'position': ea.gsx$ofrezconecesito.$t,
+                'details': ea['gsx$quéofrezconecesitocomidahospedajeaguatransporteperitajesetc.-porfavorofreceayudaprofesionalasistenciamédicaperitajessieresunprofesionaleneltema'].$t,
+              }
+            });
+
+            var inNeed = entries.filter(function (ea) {
+              return ea.needsHelp;
+            });
+
+            var offeringHelp = entries.filter(function (ea) {
+              return !ea.needsHelp;
+            });
+
+
+          }).fail(function(error) {
+            console.log('Unable to get Google FusionTable data.', error);
+            $('#searchBarComponent').hide();
+          });
+         
+
+      }());
     </script>
 
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
