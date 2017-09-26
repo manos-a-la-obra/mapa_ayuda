@@ -1,5 +1,5 @@
 .jumbotron-wrapper {
-  background-image: url("jumbo_bg.jpg");
+  background-image: url("../images/header.jpg");
   background-size: cover;
 
   /* TODO: Figure out how to blur image and brighten */
