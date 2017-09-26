@@ -323,7 +323,7 @@
       (function($){
           $.fn.extend({
               donetyping: function(callback,timeout){
-                  timeout = timeout || 1e3; // 1 second default timeout
+                  timeout = timeout || 1e3/4; // 0.25 second default timeout
                   var timeoutReference,
                       doneTyping = function(el){
                           if (!timeoutReference) return;
