@@ -67,6 +67,20 @@
 
         <div class="col-md-8">
 
+          <div class="alert alert-info" role="alert">
+              
+              <i class="fa fa-handshake-o" aria-hidden="true"></i>
+
+              <strong id="offeringHelpCount">1173+</strong>
+              actualmente ofreciendo ayuda.
+              
+              <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+
+              <strong id="needingHelpCount">201+</strong>
+              actualmente solicitando ayuda.
+          
+          </div>
+
           <ul class="nav nav-tabs" id="offerOrNeed" role="tablist">
             
             <li class="nav-item">
@@ -140,7 +154,7 @@
         
         <div class="col-md-4">
 
-          <div class="input-group"
+          <div class="input-group input-group-lg"
                id="searchBarComponent">
 
             <span class="input-group-addon" id="sizing-addon1">
@@ -148,13 +162,21 @@
             </span>
             
             <input type="text"
+                  id="searchInput"
                   class="form-control"
                   placeholder="buscar..."
                   aria-describedby="sizing-addon1">
 
           </div>
 
-          <br>
+          <div class="list-group" id="searchBarResults">
+            <!-- Example of one div that would lie in this when searching -->
+            <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
+          </div>
+
+          <!-- TODO: Hack to make this card start at 
+                     same vertical align as maps card -->
+          <div style="height:57px"></div>
               
           <div class="card" id="sideInfoCard">
             
@@ -266,6 +288,7 @@
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
 
     <script type="text/javascript">
+
       /*!
        * IE10 viewport hack for Surface/desktop Windows 8 bug
        * Copyright 2014-2017 The Bootstrap Authors
@@ -290,63 +313,203 @@
 
       }());
 
+      // $('#element').donetyping(callback[, timeout=1000])
+      // Fires callback when a user has finished typing. This is determined by the time elapsed
+      // since the last keystroke and timeout parameter or the blur event--whichever comes first.
+      //   @callback: function to be called when even triggers
+      //   @timeout:  (default=1000) timeout, in ms, to to wait before triggering event if not
+      //              caused by blur.
+      // Requires jQuery 1.7+
+      (function($){
+          $.fn.extend({
+              donetyping: function(callback,timeout){
+                  timeout = timeout || 1e3; // 1 second default timeout
+                  var timeoutReference,
+                      doneTyping = function(el){
+                          if (!timeoutReference) return;
+                          timeoutReference = null;
+                          callback.call(el);
+                      };
+                  return this.each(function(i,el){
+                      var $el = $(el);
+                      // Chrome Fix (Use keyup over keypress to detect backspace)
+                      // thank you @palerdot
+                      $el.is(':input') && $el.on('keyup keypress paste',function(e){
+                          // This catches the backspace button in chrome, but also prevents
+                          // the event from triggering too preemptively. Without this line,
+                          // using tab/shift+tab will make the focused element fire the callback.
+                          if (e.type=='keyup' && e.keyCode!=8) return;
+                          
+                          // Check if timeout has been set. If it has, "reset" the clock and
+                          // start over again.
+                          if (timeoutReference) clearTimeout(timeoutReference);
+                          timeoutReference = setTimeout(function(){
+                              // if we made it here, our timeout has elapsed. Fire the
+                              // callback
+                              doneTyping(el);
+                          }, timeout);
+                      }).on('blur',function(){
+                          // If we can, fire the event since we're leaving the field
+                          doneTyping(el);
+                      });
+                  });
+              }
+          });
+      })(jQuery);
+
+      // TODO: This is a hack, can it be resolved in CSS?
       (function () {
-        // TODO: This is a hack, can it be resolved in CSS?
+
         // Adjust maximum map div height to match left card's height
         var sideChartHeight = $('#sideInfoCard').height();
         // Use the smaller of these two options
         var useHeight = sideChartHeight > 900 ? 900 : sideChartHeight;
         $('#offerOrNeedContent').height(useHeight + 50);
 
-        var dataUrl = 'https://spreadsheets.google.com/feeds/list/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/1/public/values?alt=json';
-
-        $.get(dataUrl)
-          .then(function(response) {
-            console.log(response);
-            // Skip the first few entries which are the headers
-            var entries = response.feed.entry.slice(3,);
-            entries = entries.map(function (ea) {
-              return {
-                // Location aspects
-                'address': ea.gsx$addressbot.$t,
-                'ciudad': ea.gsx$ciudad.$t,
-                'colonia': ea.gsx$colonia.$t,
-                'municipality': ea.gsx$delegaciónmunicipio.$t,
-                'estado': ea.gsx$estado.$t,
-                'postal': ea.gsx$códigopostal.$t,
-
-                // Attempted
-
-                // Social aspects
-                'facebook': ea.gsx$facebookpontuhandleounlinkrecuerdaquemuchosnombresestánrepetidosenfacebook.$t,
-                'twitter': ea.gsx$twitter.$t,
-
-                // Identification
-                'nombre': ea.gsx$nombresieresmiembrodeunaorganizacióntambiénponsunombre.$t,
-
-                // Offering or receiving
-                'needsHelp': (ea.gsx$ofrezconecesito.$t !== 'Ofrezco'),
-                'position': ea.gsx$ofrezconecesito.$t,
-                'details': ea['gsx$quéofrezconecesitocomidahospedajeaguatransporteperitajesetc.-porfavorofreceayudaprofesionalasistenciamédicaperitajessieresunprofesionaleneltema'].$t,
-              }
-            });
-
-            var inNeed = entries.filter(function (ea) {
-              return ea.needsHelp;
-            });
-
-            var offeringHelp = entries.filter(function (ea) {
-              return !ea.needsHelp;
-            });
-
-
-          }).fail(function(error) {
-            console.log('Unable to get Google FusionTable data.', error);
-            $('#searchBarComponent').hide();
-          });
-         
-
       }());
+
+      // Udpate how we deal with String protos
+      String.prototype.toProperCase = function () {
+        var cleaned = this.split(' ');
+        cleaned = cleaned.map(function (ea) {
+          return ea.replace(/\w\S*/g, function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+          });
+        })
+        return cleaned.join(' ');
+      };
+
+    </script>
+
+    <script type="text/javascript">
+
+      // Globals
+      var entries = [];
+      var dataUrl = 'https://spreadsheets.google.com/feeds/list/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/1/public/values?alt=json';
+
+      $('#searchInput').donetyping(function () {
+        var content = $('#searchInput').val().toLowerCase();
+        var possibleEntries = entries.filter(function (ea) {
+          var keys = Object.keys(ea);
+          var anyValid = keys.filter(function (k) {
+            if (typeof ea[k] !== 'string') {
+              return false;
+            }
+            var lower = ea[k].toLowerCase();
+            return lower.indexOf(content) > -1;
+          });
+          return anyValid.length > 0;
+        });
+
+        updateSearchresultsList(possibleEntries.reverse().slice(0,5));
+      });
+
+      function updateSearchresultsList (e) {
+        var searchRes = $('#searchBarResults');
+        searchRes.empty();
+
+        e.forEach(function (ea) {
+          var level = ea.needsHelp ? 'danger' : 'success';
+          var icon = ea.needsHelp ? 'fa-hand-paper-o' : 'fa-handshake-o';
+
+          var phoneHTML = `
+            <br>
+            <small>
+              <i class="fa fa-whatsapp" aria-hidden="true"></i>
+              ${ea.telephone}
+            </small>
+          `
+          var phoneInfo = ea.telephone ? phoneHTML : '';
+
+          var fullAddress = ea.address ? ea.address : ea.geocoded;
+          var altAddress = [ea.colonia,
+                            ea.ciudad,
+                            ea.postal].filter(function (ea) {
+                              return ea
+                            }).join(', ').toProperCase();
+
+          searchRes.append(`
+            <li class="list-group-item list-group-item-${level}">
+
+              <i class="fa ${icon}" aria-hidden="true"></i>
+              <strong>
+                ${ea.nombre.toProperCase()}
+              </strong>
+
+              ${phoneInfo}
+
+              <br>
+
+              <small>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                ${!fullAddress ? fullAddress : altAddress}
+              </small>
+
+              <hr class="my-2">
+
+              <small>
+                ${ea.details.toProperCase()}
+              </small>
+              
+              <br>
+
+            </li>
+          `);
+        });
+
+        return null;
+      }
+
+      $.get(dataUrl)
+        .then(function(response) {
+          // Skip the first few entries which are the headers
+          entries = response.feed.entry.slice(3,);
+          
+          entries = entries.map(function (ea) {
+            return {
+              // Location aspects
+              'address': ea.gsx$addressbot.$t.trim(),
+              'geocoded': ea.gsx$geocoding.$t.trim(),
+              'colonia': ea.gsx$colonia.$t.trim(),
+              'ciudad': ea.gsx$ciudad.$t.trim(),
+              'municipality': ea.gsx$delegaciónmunicipio.$t.trim(),
+              'estado': ea.gsx$estado.$t.trim(),
+              'postal': ea.gsx$códigopostal.$t.trim(),
+
+              // Attempted
+
+              // Social aspects
+              'facebook': ea.gsx$facebookpontuhandleounlinkrecuerdaquemuchosnombresestánrepetidosenfacebook.$t.trim(),
+              'twitter': ea.gsx$twitter.$t.trim(),
+              'telephone': ea.gsx$teléfonowhatsapp.$t.trim(),
+
+              // Identification
+              'nombre': ea.gsx$nombresieresmiembrodeunaorganizacióntambiénponsunombre.$t.trim(),
+
+              // Offering or receiving
+              'needsHelp': (ea.gsx$ofrezconecesito.$t !== 'Ofrezco'),
+              'position': ea.gsx$ofrezconecesito.$t.trim(),
+              'details': ea['gsx$quéofrezconecesitocomidahospedajeaguatransporteperitajesetc.-porfavorofreceayudaprofesionalasistenciamédicaperitajessieresunprofesionaleneltema'].$t.trim(),
+            }
+          });
+
+          var inNeed = entries.filter(function (ea) {
+            return ea.needsHelp;
+          });
+          $('#needingHelpCount').html(`${inNeed.length}+`);
+
+          var offeringHelp = entries.filter(function (ea) {
+            return !ea.needsHelp;
+          });
+          $('#offeringHelpCount').html(`${offeringHelp.length}+`);
+
+
+        })
+        .fail(function(error) {
+          console.log('Unable to get Google FusionTable data.', error);
+          $('#searchBarComponent').hide();
+        });
+
     </script>
 
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
