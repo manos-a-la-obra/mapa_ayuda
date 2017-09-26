@@ -334,7 +334,7 @@
                       var $el = $(el);
                       // Chrome Fix (Use keyup over keypress to detect backspace)
                       // thank you @palerdot
-                      $el.is(':input') && $el.on('keyup keypress paste',function(e){
+                      $el.is(':input') && $el.on('keyup keypress paste', function(e){
                           // This catches the backspace button in chrome, but also prevents
                           // the event from triggering too preemptively. Without this line,
                           // using tab/shift+tab will make the focused element fire the callback.
@@ -344,8 +344,8 @@
                           // start over again.
                           if (timeoutReference) clearTimeout(timeoutReference);
                           timeoutReference = setTimeout(function(){
-                              // if we made it here, our timeout has elapsed. Fire the
-                              // callback
+                              // if we made it here, our timeout has elapsed.
+                              // Fire the callback.
                               doneTyping(el);
                           }, timeout);
                       }).on('blur',function(){
@@ -389,19 +389,26 @@
 
       $('#searchInput').donetyping(function () {
         var content = $('#searchInput').val().toLowerCase();
-        var possibleEntries = entries.filter(function (ea) {
-          var keys = Object.keys(ea);
-          var anyValid = keys.filter(function (k) {
-            if (typeof ea[k] !== 'string') {
-              return false;
-            }
-            var lower = ea[k].toLowerCase();
-            return lower.indexOf(content) > -1;
-          });
-          return anyValid.length > 0;
-        });
 
-        updateSearchresultsList(possibleEntries.reverse().slice(0,5));
+        if (content.length < 3) {
+          $('#searchBarResults').empty();
+          return null;
+        
+        } else {
+          var possibleEntries = entries.filter(function (ea) {
+            var keys = Object.keys(ea);
+            var anyValid = keys.filter(function (k) {
+              if (typeof ea[k] !== 'string') {
+                return false;
+              }
+              var lower = ea[k].toLowerCase();
+              return lower.indexOf(content) > -1;
+            });
+            return anyValid.length > 0;
+          });
+
+          updateSearchresultsList(possibleEntries.reverse().slice(0,5)); 
+        }
       });
 
       function updateSearchresultsList (e) {
