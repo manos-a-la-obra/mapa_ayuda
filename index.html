@@ -75,32 +75,6 @@
               </a>
             </li>
           </ul>
-        </div>
-        <div class="col-md-4">
-          <div class="input-group input-group-lg"
-               id="searchBarComponent">
-
-            <span class="input-group-addon" id="sizing-addon1">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </span>
-
-            <input type="text"
-                  id="searchInput"
-                  class="form-control"
-                  placeholder="buscar..."
-                  aria-describedby="sizing-addon1">
-
-          </div>
-
-          <div class="list-group" id="searchBarResults">
-            <!-- Example of one div that would lie in this when searching -->
-            <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-8">
           <div class="tab-content" id="offerOrNeedContent">
             <div class="tab-pane fade show active" id="ofrezco" role="tabpanel" aria-labelledby="ofrezco-tab">
               <iframe width="100%"
@@ -121,54 +95,70 @@
         </div>
 
         <div class="col-md-4">
+          <div class="input-group input-group-lg"
+               id="searchBarComponent">
+
+            <span class="input-group-addon" id="sizing-addon1">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+
+            <input type="text"
+                  id="searchInput"
+                  class="form-control"
+                  placeholder="buscar..."
+                  aria-describedby="sizing-addon1">
+
+          </div>
+
+          <div class="list-group" id="searchBarResults">
+            <!-- Example of one div that would lie in this when searching -->
+            <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
+          </div>
 
           <div class="map-aside" id="sideInfoCard">
+            <h4 class="map-aside__title"> ¿No sabes qué hacer? ¡Ayúdanos!</h4>
 
-            <div class="card-body">
+            <p class="card-text">
+              Sal a la calle y reporta en esta página la ayuda requerida por otras personas.
+              No todos tienen internet. Pon los datos de contacto de la persona que necesita/ofrece
+              ayuda.
+            </p>
 
-              <h4 class="card-title">
-                ¿No sabes qué hacer? ¡Ayúdanos!
-              </h4>
+            <p class="card-text">
+              Busca gente que necesita ayuda en la base de datos que está cerca de ti. Ayúdalos.
+            </p>
 
-              <p class="card-text">
-                Sal a la calle y reporta en esta página la ayuda requerida por otras personas. No todos tienen internet. Pon los datos de contacto de la persona que necesita/ofrece ayuda.
-              </p>
+            <p class="card-text">
+              Si sabes de algún grupo real que necesite ayuda, añádelo a la base de datos. Responde
+              Necesito a la primera pregunta y añade los datos de contacto de la organización.
+            </p>
 
-              <p class="card-text">
-                Busca gente que necesita ayuda en la base de datos que está cerca de ti. Ayúdalos.
-              </p>
+            <p class="card-text">
+              Mucha gente que necesita ayuda no tiene manera de informar a los demás. Por favor
+              contáctalos con los voluntarios en la lista.
+            </p>
 
-              <p class="card-text">
-                Si sabes de algún grupo real que necesite ayuda, añádelo a la base de datos. Responde Necesito a la primera pregunta y añade los datos de contacto de la organización.
-              </p>
+            <p class="card-text">
+              Contacta con la gente pidiendo ayuda fuera de las grandes ciudades. Ellos no están
+              recibiendo tanta atención.
+            </p>
 
-              <p class="card-text">
-                Mucha gente que necesita ayuda no tiene manera de informar a los demás. Por favor contáctalos con los voluntarios en la lista.
-              </p>
+            <p class="card-text">
+              Recuerda que esta información no sirve de nada si no nos conectamos y llevamos la
+              ayuda a quien la necesite.
+            </p>
 
-              <p class="card-text">
-                Contacta con la gente pidiendo ayuda fuera de las grandes ciudades. Ellos no están recibiendo tanta atención.
-              </p>
+            <p class="text-center">
+              <a class="btn btn-navy" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://manosalaobrasismo.mx/">
+                <i class="fa fa-facebook-official fa-lg" aria-hidden="true"></i>
+               Compartir
+             </a>
+              <a class="btn btn-navy" target="_blank" href="https://twitter.com/home?status=Manos%20a%20la%20Obra%3A%20Coordinaci%C3%B3n%20de%20ayuda%20para%20el%20sismo%20en%20M%C3%A9xico%20http%3A//www.manosalaobrasismo.mx%20%23manosalaobra">
+                <i class="fa fa-twitter fa-lg" aria-hidden="true"></i>
+               Compartir
+             </a>
+            </p>
 
-              <p class="card-text">
-                Recuerda que esta información no sirve de nada si no nos conectamos y llevamos la ayuda a quien la necesite.
-              </p>
-
-              <p class="text-center">
-                <a class="btn btn-primary"
-                   target="_blank"
-                   href="https://www.facebook.com/sharer/sharer.php?u=http://manosalaobrasismo.mx/">
-                  <i class="fa fa-facebook-official fa-lg" aria-hidden="true"></i>
-                 Compartir
-               </a>
-                <a class="btn btn-primary"
-                   target="_blank"
-                   href="https://twitter.com/home?status=Manos%20a%20la%20Obra%3A%20Coordinaci%C3%B3n%20de%20ayuda%20para%20el%20sismo%20en%20M%C3%A9xico%20http%3A//www.manosalaobrasismo.mx%20%23manosalaobra">
-                  <i class="fa fa-twitter fa-lg" aria-hidden="true"></i>
-                 Compartir
-               </a>
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -177,7 +167,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-8">
-          <h3>Quiénes Somos</h3>
+          <h3 class="about-us__title">Quiénes Somos</h3>
           <p class="card-text">
             Somos un grupo de habitantes del internet mexicanos que vive por todo México y Estados Unidos.
             Nos conocimos en el Department of Urban Studies and Planning del MIT y la Harvard Graduate School
@@ -198,13 +188,14 @@
             Mil abrazos a todos los que perdieron todo y a los que están rompiéndose la espalda en las calles. Estamos trabajando por ustedes.
             Si quieres ayudarnos a organizar y distribuir la ayuda o tienes alguna duda, únete a <a target="_blank" href="https://www.facebook.com/groups/494018237616873/">este grupo</a>.
           </p>
-
-          <p class="card-text">
-            2017
-          </p>
         </div>
       </div>
     </div>
+    <footer class="site-footer">
+      <div class="container text-center">
+        2017
+      </div>
+    </footer>
 
     <!-- JS library imports at end so page loads faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

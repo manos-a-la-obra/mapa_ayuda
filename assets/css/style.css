@@ -102,6 +102,18 @@
   color: #08384f;
 }
 
+.btn-navy {
+  background-color: #08384f;
+  border-color: #08384f;
+  color: #fff;
+}
+
+.btn-navy:hover {
+  background-color: #006699;
+  border-color: #006699;
+  color: #fff;
+}
+
 .btn-flat {
   border-radius: 0;
 }
@@ -117,4 +129,28 @@
 
 .nav li .btn:focus {
   box-shadow: 0 0 0;
+}
+
+.map-aside {
+  padding-top: 64px;
+}
+
+.map-aside__title {
+  background-color: #08384f;
+  color: #fff;
+  margin-bottom: 30px;
+  padding: 25px 20px;
+  text-align: center;
+}
+
+.about-us__title {
+  color: #08384f;
+  margin-bottom: 25px;
+}
+
+.site-footer {
+  background-color: #08384f;
+  padding: 15px;
+  color: #fff;
+  margin-top: 30px;
 }
