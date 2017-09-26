@@ -51,98 +51,32 @@
     </div>
 
     <div class="container-fluid">
-
       <div class="row">
-
         <div class="col-md-8">
-
           <div class="alert alert-info" role="alert">
-
               <i class="fa fa-handshake-o" aria-hidden="true"></i>
-
               <strong id="offeringHelpCount">1173+</strong>
               ofertas de ayuda
-
               <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-
               <strong id="needingHelpCount">201+</strong>
               solicitudes de ayuda
-
           </div>
 
-          <ul class="nav nav-tabs" id="offerOrNeed" role="tablist">
-
-            <li class="nav-item">
-              <a class="nav-link active"
-                 id="ofrezco-tab"
-                 data-toggle="tab"
-                 href="#ofrezco"
-                 role="tab"
-                 aria-controls="ofrezco"
-                 aria-expanded="true">Ofrezco</a>
+          <ul class="nav" id="offerOrNeed" role="tablist">
+            <li role="presentation">
+              <a class="btn btn-green" data-toggle="tab" href="#ofrezco" role="tab">
+                Ofrezco
+              </a>
             </li>
 
-            <li class="nav-item">
-              <a class="nav-link"
-                 id="necesito-tab"
-                 data-toggle="tab"
-                 href="#necesito"
-                 role="tab"
-                 aria-controls="necesito">Necesito</a>
+            <li role="presentation">
+              <a class="btn btn-info" data-toggle="tab" href="#necesito" role="tab">
+                Necesito
+              </a>
             </li>
-
           </ul>
-
-          <div class="tab-content" id="offerOrNeedContent">
-
-            <div class="tab-pane fade show active"
-                 id="ofrezco"
-                 role="tabpanel"
-                 aria-labelledby="ofrezco-tab">
-
-              <div class="card border-top-0 rounded-0 rounded-bottom">
-
-                <div class="card-body">
-
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=10&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="tab-pane fade"
-                 id="necesito"
-                 role="tabpanel"
-                 aria-labelledby="necesito-tab">
-
-              <div class="card border-top-0 rounded-0 rounded-bottom">
-
-                <div class="card-body">
-
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=9&amp;l=col17&amp;y=4&amp;tmplt=4&amp;hml=TWO_COL_LAT_LNG"></iframe>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
         </div>
-
         <div class="col-md-4">
-
           <div class="input-group input-group-lg"
                id="searchBarComponent">
 
@@ -162,12 +96,33 @@
             <!-- Example of one div that would lie in this when searching -->
             <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
           </div>
+        </div>
+      </div>
 
-          <!-- TODO: Hack to make this card start at
-                     same vertical align as maps card -->
-          <div style="height:57px"></div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="tab-content" id="offerOrNeedContent">
+            <div class="tab-pane fade show active" id="ofrezco" role="tabpanel" aria-labelledby="ofrezco-tab">
+              <iframe width="100%"
+                      height="90%"
+                      scrolling="no"
+                      frameborder="no"
+                      src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=10&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+            </div>
 
-          <div class="card" id="sideInfoCard">
+            <div class="tab-pane fade" id="necesito" role="tabpanel" aria-labelledby="necesito-tab">
+              <iframe width="100%"
+                      height="90%"
+                      scrolling="no"
+                      frameborder="no"
+                      src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=9&amp;l=col17&amp;y=4&amp;tmplt=4&amp;hml=TWO_COL_LAT_LNG"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+
+          <div class="map-aside" id="sideInfoCard">
 
             <div class="card-body">
 
@@ -205,7 +160,6 @@
                <i class="fa fa-facebook-official fa-lg" aria-hidden="true"></i>
                Compartir Manos a la Obra
              </a>
-
               <a class="btn btn-primary btn-block"
                  target="_blank"
                  href="https://twitter.com/home?status=Manos%20a%20la%20Obra%3A%20Coordinaci%C3%B3n%20de%20ayuda%20para%20el%20sismo%20en%20M%C3%A9xico%20http%3A//www.manosalaobrasismo.mx%20%23manosalaobra">
@@ -213,15 +167,10 @@
                <i class="fa fa-twitter fa-lg" aria-hidden="true"></i>
                Tweet Manos a la Obra
              </a>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
 
     <div class="container-fluid">
@@ -301,7 +250,6 @@
         }
 
       }());
-<<<<<<< HEAD
 
       // $('#element').donetyping(callback[, timeout=1000])
       // Fires callback when a user has finished typing. This is determined by the time elapsed
@@ -346,8 +294,6 @@
               }
           });
       })(jQuery);
-=======
->>>>>>> ee5906a... WIP: New design on header
 
       // TODO: This is a hack, can it be resolved in CSS?
       (function () {
@@ -521,11 +467,6 @@
           $('#searchBarComponent').hide();
         });
 
-<<<<<<< HEAD
-=======
-        $('#offerOrNeedContent').height(useHeight + 26);
-      }());
->>>>>>> ee5906a... WIP: New design on header
     </script>
 
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
