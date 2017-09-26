@@ -415,6 +415,18 @@
         var searchRes = $('#searchBarResults');
         searchRes.empty();
 
+        // Make a note that gets added if there are no valid results
+        if (e.length == 0) {
+          searchRes.append(`
+            <li class="list-group-item list-group-item-action">
+              <i class="fa fa-meh-o" aria-hidden="true"></i>
+              <strong>
+                No hay resultados.
+              </strong>
+            </li>
+          `);
+        }
+
         e.forEach(function (ea) {
           var level = ea.needsHelp ? 'danger' : 'success';
           var icon = ea.needsHelp ? 'fa-hand-paper-o' : 'fa-handshake-o';
