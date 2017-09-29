@@ -35,97 +35,114 @@
 </head>
 <body>
 
-<div id='map_container'>
-	<div id='controls' style="z-index: 1; position: absolute; top: 0px; left: 0px;">
-			<input type="radio" name="filter" id="all" value="all" /><label for="all">Ver todo</label>
-		    </br>
-		    <input type="radio" name="filter" id="ofrezco" value="Ofrezco" /><label for="ofrezco">Ofrezco</label>
-		    </br>
-		    <input type="radio" name="filter" id="necesito" value="Necesito" /><label for="necesito">Necesito</label>
-		    </br>
-		    <input type="radio" name="filter" id="manos" value="Ofrezco" /><label for="manos">Manos/voluntarios</label>
-		    </br>
-  		</ul>
-	</div>
+<div>
+        <nav id="menu"></nav>
 	<div id='map'></div>
+
+
+<style>
+#menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+
+
+    #menu b {
+        font-size: 10px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0.0,0.25);
+        text-align: center;
+    }
+
+    #menu b:last-child {
+        border: none;
+    }
+
+    #menu b:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+    #menu b.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu b.active:hover {
+        background: #3074a4;
+    }
+
+
+
+
+</style>
 </div>
+
 
 <script>
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnV6b2hlcmJlcnQiLCJhIjoibXJXclpEVSJ9.YxiPmO7Q5QZrOGCuOsAYQg';
 
+
 var map = new mapboxgl.Map({
   container: 'map',	
   style: 'mapbox://styles/buzoherbert/cj827abvc9bnr2rmscyivgxpb',
-  center: [-96, 37.8],
-  zoom: 3
+  center: [-99.1831799, 19.471516],
+  zoom: 4
 });
-map.on('load', function () {
-
-    map.addLayer({
-        "id": "points",
-        "type": "symbol",
-        "source": {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-77.03238901390978, 38.913188059745586]
-                    },
-                    "properties": {
-                        "title": "Mapbox DC",
-                        "icon": "monument"
-                    },
-                    "___id": "points",
-                }, 
-
-
-{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-122.414, 37.776]
-                    },
-                    "properties": {
-                        "title": "Mapbox SF",
-                        "icon": "harbor"
-                    }
-                }]
-            }
-        },
-        "layout": {
-            "icon-image": "{icon}-15",
-            "text-field": "{title}",
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-offset": [0, 0.6],
-            "text-anchor": "top"
-        }
-    });
-});
-
 
 var data_base;
+var n_categories = 14;
+var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
+var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
-function createdatabase(){
-    getting_db();
+function createdatabase(card){
+    getting_db(card);
 }
 
 
-function getTableData(key,cat,callback){
-    getting_db().then(callback(key,cat));
-}
-
-function call_ll(){
-    console.log(typeof data_base)
-    var myJSON = JSON.stringify(data_base({"comida":{is:true}}).get());
-    console.log(myJSON);
-    return;
-}
-
-function getting_db(){
+function getting_db(card){
     // Document
     // directamente por tabla
     var googlesheet = "https://docs.google.com/spreadsheets/d/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/gviz/tq?tq=select%20A%20B%20C%20R%20S%20T&sheet={Form Responses 1}"
@@ -135,12 +152,12 @@ function getting_db(){
              callback:function(){
              var query = new google.visualization.Query(googlesheet);
              query.setQuery("SELECT *"); 
-             query.send(handleQueryResponse);
+             query.send(function(response){handleQueryResponse(response,card)});
              }
    })
    }
 
-function handleQueryResponse(response){
+function handleQueryResponse(response,card){
        if (response.isError()) {
             alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         }
@@ -155,72 +172,154 @@ function handleQueryResponse(response){
                       parseRow(row);
                   },
                   complete: function() {
-                          create_selectors(db);
+                          create_selectors(db,card);
                           console.log("All results");
                  }});
         }
 
 
-function create_selectors(db){
-    var myJSON = JSON.stringify(db({"asistenciamedica":{is:true}}).select("geojson"));
-    console.log(myJSON);
-    //var keys_true = {is:true}
-    //var keys = {"Necesito":keys_true}
-    //create_botton("Necesito",db,keys);
+function create_selectors(db,card){
+    var sel = 'a';
+    //separate_data(db,sel,"Necesito");
+    //var sel = 'b';
+    separate_data(db,sel,card);
+    create_bottoms();
+    //callback();
 }
 
-function create_botton(value,db,keys){
-     // Here que charge options
-     var boton = document.createElement("button");
-     boton.type = "button";
-     boton.value = "Clic";
-     document.body.appendChild(boton);
-     function map_render(){
-          separate_data(db,keys);
-     }
-     if (boton.addEventListener) {
-        boton.addEventListener('click', map_render, false);
-     }
-}
 
-function map_render(data,keys){
-    separate_data(data,keys);
-}
+function separate_data(data,selector,kind){
 
-function separate_data(data,keys){
-   console.log(get_data(data,keys));
+   var filter_entry = {};
+   filter_entry["title"] = kind;
    
+
+   categories.forEach(function(entry,index) {
+      var key_entry = {};
+      key_entry[entry] = true;
+
+      var select_data = data().filter(filter_entry,key_entry).select("geojson");
+      var data_geo = {//"id": "point",
+                 "type": "geojson",
+                 "data": {"type": "FeatureCollection",
+                          "features":select_data
+                         }
+               };
+      var label = toggleableLayerIds[index];
+      map.on('load', function () {
+      map.addLayer({
+          'id': label,
+          'source': data_geo,
+          "type": "circle",
+          'layout': {'visibility': 'visible'
+                    },
+          'paint': {
+             'circle-radius': 3,
+             'circle-color': {
+                 property: "title",
+                 type: "categorical",
+                 stops: [ ["Necesito",'#e55e5e'],
+                        ["Ofrezco",'#3bb2d0'] ]
+                             }
+                 }
+            });
+        });
+        map.on('click', label, function (e) {
+           new mapboxgl.Popup()
+            .setLngLat(e.features[0].geometry.coordinates)
+            .setHTML(e.features[0].properties.description)
+            .addTo(map);
+         });
+     
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', toggleableLayerIds, function () {
+            map.getCanvas().style.cursor = 'pointer';
+         });
+    })
+};
+
+function create_bottoms(){
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+         var id = toggleableLayerIds[i];
+
+         var link = document.createElement('a');
+         link.href = '#';
+         link.className = 'active';
+         link.textContent = id;
+
+        link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+            if (visibility === 'visible') {
+               map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+               this.className = '';
+            } else {
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+             }
+       };
+  
+
+    var layers = document.getElementById('menu');
+    layers.appendChild(link);
 }
 
-function get_data(data,keys){
-      console.log(keys);
-      return JSON.stringify(data(keys).get());
 }
 
 function wrapper_parseRow(data,db){
     function parseRow(row){
     
+      if(row.data[0][19] != ''){ // Trowing out entries without timestamp
       if(row.data[0][0] != ''){ // Trowing out entries without timestamp
         var elem = {};
         elem["type"]="Feature";
         var geom = {"type":"Point", 
-                    "coordinates":[ row.data[0][19], row.data[0][20]]
+                    "coordinates":[parseFloat(row.data[0][19]),parseFloat(row.data[0][18])]
                      };
         var properties = {"title":row.data[0][1], 
+                          "name":row.data[0][1], 
                           "icon": "harbor",
-                          "message": get_message(row)};
+                          "description": get_message(row)};
         elem = get_categories(row.data[0][2],elem); // Categories
-        elem["geojson"] = {"geometry": geom, "properties":properties};
-        console.log(elem);
+         elem["geojson"] = {"geometry": geom,"id":"points","properties":properties,"type":"circle"};
+        elem["title"] = row.data[0][1]; 
         db.insert(elem); 
 	};
+    };
     };
     return parseRow
 }
 
 
 function get_message(row){
-        return row.data[0][2]; 
+       var line = "<strong>"+row.data[0][0] +" "+row.data[0][1]+"</strong><p> ¿Qué ofrezco/necesito? "+row.data[0][2]+" <\p>";
+       if(row.data[0][5] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>Nombre</strong> "+row.data[0][5] +" <p>";}
+       if(row.data[0][3] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>Lugar</strong> "+row.data[0][3] +","+row.data[0][4]+","+ row.data[0][7] +","+row.data[0][8]+","+row.data[0][9]+"<p>";
+       }
+       if(row.data[0][11] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>¿Qué tanto puedes dar/necesitas?</strong> "+row.data[0][11] +"<\p> ";
+       }
+       if(row.data[0][6] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Facebook</strong> "+row.data[0][6]+"<\p> ";
+       }
+       if(row.data[0][13] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Teléfono</strong> "+row.data[0][13]+"<\p> ";
+       }
+       if(row.data[0][14] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Email</strong> "+row.data[0][14]+"<\p> ";
+       }
+       if(row.data[0][15] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Twitter</strong> "+row.data[0][15]+"<\p> ";
+       }
+       if(row.data[0][10] != ''){ // Trowing out entries without timestamp
+          line = line +"<p> <strong>Comentarios</strong> "+row.data[0][10] +"<\p> ";
+        }
+        return line;
 }
 
 
@@ -237,68 +336,46 @@ function RemoveAccents(strAccents) {
 				strAccentsOut[y] = strAccents[y];
 		}
 		strAccentsOut = strAccentsOut.join('');
-		return strAccentsOut;
+		return remove_char(strAccentsOut);
 }
+
+
+function remove_char(line){
+    return line.replaceAll(" ",'').replaceAll(",","").replaceAll("-","").replaceAll("/","").toLowerCase();
+}
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 
 
 function get_categories(line,elem){
     line = RemoveAccents(line);
-    line = line.toLowerCase();
-    line = line.replace(" ","");
-    line = line.replace(",","");
-    line = line.replace("-","");
-    var otro = false;
+    //console.log(line);
     for (var i =0; i < n_categories-1; i++){
         if (line.search(categories[i])> -1){
-           line = line.replace(categories[i], "");
-           elem[categories[i]] = true;
+          elem[categories[i]] = true;
+          line = line.replaceAll(categories[i], "");
         }
-        else
-           elem[categories[i]] = false;
-     }
-     if (line.legth != 0){
-          line = line.replace(" ","");
-          line = line.replace(",","");
-          line = line.replace("-","");
-          otro = true;
+        else{
+          elem[categories[i]] = false;
+       }
+     };
+     if (line != ""){
+        elem[categories[n_categories-1]] = true;
     }
-    elem[categories[n_categories-1]] = otro;
-    return elem
+    else{
+        elem[categories[n_categories-1]] = false;
+    };
+    //console.log(line_f);
+    return elem;
 }
 
-function classify(catkey,cat){
-     return data_base({catkey:{is:cat}})
-}
-
-function get_Database(){
-    return  getTableData();
-}
-
-
-function get_necesito(){
-     return getin_out("Ofrezco/Necesito","Necesito");
-}
-
-function find(){
-   all_data.necesito = {};
-   all_data.ofrezco = {};
-}
-
-function all(){
-   console.log(db({"comida":{is:true}}));
-   //console.log(db({properties:{Comida:{is:true}}}));
-
-}
-
-
-var n_categories = 14;
-var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
-
-createdatabase();
+createdatabase("Necesito");
 
 
 
-// code from the next step will go here!
 </script>
 
 </body>
