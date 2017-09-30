@@ -157,9 +157,6 @@
                 
                 <div class="card-body">
                    <style>
-
-
-                  
                    #menu {
                       overflow: hidden;
                       background: #fff;
@@ -167,8 +164,8 @@
                       top: 20px;
                       right: 22px;
                       z-index: 2;
-                      border-radius: 3px;
-                      width: 145px;
+                      border-radius: 2px;
+                      width: 140px;
                       border: 1px solid rgba(0,0,0,0.4);
                       font-family: 'Open Sans', sans-serif;
                    }
@@ -241,10 +238,71 @@
               <div class="card border-top-0 rounded-0 rounded-bottom">
                 
                 <div class="card-body">
+                   <style>
+                   #menu_necesito {
+                      overflow: hidden;
+                      background: #fff;
+                      position: absolute;
+                      top: 20px;
+                      right: 22px;
+                      z-index: 2;
+                      border-radius: 2px;
+                      width: 140px;
+                      border: 1px solid rgba(0,0,0,0.4);
+                      font-family: 'Open Sans', sans-serif;
+                   }
+                  
+                  #menu_necesito a {
+                      font-size: 12px;
+                      color: #404040;
+                      display: block;
+                      z-index: 2;
+                      margin: 0;
+                      padding: 01px;
+                      text-decoration: none;
+                      border-bottom: 1px solid rgba(0,0,0,0.25);
+                      text-align: center;
+                 }
 
-                 <script src="./mapa.js"></script>
+                 #menu_necesito a:last-child {
+                       border: none;
+                  }
+
+                 #menu_necesito a:hover {
+                    background-color: #f8f8f8;
+                    color: #404040;
+                  } 
+
+                 #menu_necesito a.active {
+                    background-color: #3887be;
+                    color: #ffffff;
+                 }
+
+                 #menu_necesito a.active:hover {
+                    background: #3074a4;
+                 }
+                 </style>
+
+                  <style>
+                  #mapa_necesito {
+                     position:absolute; 
+                     top:10; 
+                     bottom:10; 
+                     width:100%; 
+                     padding: 0px;
+                     height: 100%;
+                     max-height: auto;
+                     z-index = 1;
+                     }
+                   </style>
+
+ 
+
+
+                      <div id="menu_necesito" style="left:0;"> </div>
+		 <div id="mapa_necesito"></div>
                  <script>
-                 createdatabase("Necesito","map_necesito","menu_necesito");
+                 createdatabase("Necesito","mapa_necesito","menu_necesito");
                  </script>
 
                 </div>

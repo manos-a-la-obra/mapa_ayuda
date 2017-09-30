@@ -1,21 +1,17 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnV6b2hlcmJlcnQiLCJhIjoibXJXclpEVSJ9.YxiPmO7Q5QZrOGCuOsAYQg';
 
-
-
-
-
 var data_base;
 var n_categories = 14;
 var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
 
 var general_stops = {"Necesito":[["today","#602320"],["three","#a32020"],["week","#e0301e"],["more","#eb8c00"]],
                     "Ofrezco":[["today","#002366"],["three","#0038A8"],["week","#4169E1"],["more","#9BDDFF"]]};
-function createdatabase(kind,container){
-    getting_db(kind,container);
+function createdatabase(kind,container,menu){
+    getting_db(kind,container,menu);
 }
 
 
-function getting_db(kind,container){
+function getting_db(kind,container,menu){
     // Document
     // directamente por tabla
     var googlesheet = "https://docs.google.com/spreadsheets/d/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/gviz/tq?tq=select%20A%20B%20C%20R%20S%20T&sheet={Form Responses 1}"
@@ -25,12 +21,12 @@ function getting_db(kind,container){
              callback:function(){
              var query = new google.visualization.Query(googlesheet);
              query.setQuery("SELECT *"); 
-             query.send(function(response){handleQueryResponse(response,kind,container)});
+             query.send(function(response){handleQueryResponse(response,kind,container,menu)});
              }
-   })
+            })
    }
 
-function handleQueryResponse(response,kind,container){
+function handleQueryResponse(response,kind,container,menu){
        if (response.isError()) {
             alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         }
@@ -45,13 +41,13 @@ function handleQueryResponse(response,kind,container){
                       parseRow(row);
                   },
                   complete: function() {
-                          create_selectors(db,kind,container);
+                          create_selectors(db,kind,container,menu);
                           console.log("All results");
                  }});
         }
 
 
-function create_selectors(db,kind,map_container){
+function create_selectors(db,kind,map_container,menu){
     var map = new mapboxgl.Map({
        container: map_container,	
        style: 'mapbox://styles/buzoherbert/cj827abvc9bnr2rmscyivgxpb',
@@ -61,7 +57,10 @@ function create_selectors(db,kind,map_container){
     //separate_data(db,sel,"Necesito");
     //var sel = 'b';
     var layers = separate_data(db,kind,map);//,add_layer);
-    create_bottoms(map);
+    create_bottoms(map,menu);
+    map.addControl(new mapboxgl.FullscreenControl());
+    map.resize();
+
     //callback();
 }
 
@@ -124,7 +123,7 @@ function separate_data(data,kind,map){
          });
 };
 
-function create_bottoms(map){
+function create_bottoms(map,menu){
      var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
@@ -133,6 +132,7 @@ function create_bottoms(map){
          link.href = '#';
          link.className = 'active';
          link.textContent = id;
+         link.setAttribute('horizontal', '');
 
         link.onclick = function (e) {
             var clickedLayer = this.textContent;
@@ -150,10 +150,9 @@ function create_bottoms(map){
        };
   
 
-    var layers = document.getElementById('menu');
+    var layers = document.getElementById(menu);
     layers.appendChild(link);
-}
-
+    }
 }
 
 function wrapper_parseRow(data,db){
