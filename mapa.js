@@ -61,6 +61,7 @@ function create_selectors(db,kind,map_container){
     //separate_data(db,sel,"Necesito");
     //var sel = 'b';
     var layers = separate_data(db,kind,map);//,add_layer);
+    create_bottoms(map);
     //callback();
 }
 
@@ -121,10 +122,10 @@ function separate_data(data,kind,map){
         });
          };
          });
-    //create_bottoms(map);
 };
 
 function create_bottoms(map){
+     var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 
