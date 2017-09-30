@@ -61,6 +61,60 @@
     </div>
     </div>
 
+    <style>
+        .mapboxgl-popup {
+        max-width: 400px;
+        font: 10px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        border-radius: 3px;
+        width: 200px;
+        border: 1px solid rgba(0.5,0.5,0.5,0.4);
+        background-color: #5cb85c;
+        }
+    </style>
+
+    <style>
+    #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+    </style>
     <div class="container-fluid">
 
       <div class="row">
@@ -105,21 +159,50 @@
           </ul>
 
           <div class="tab-content" id="offerOrNeedContent">
+          <!Stuff for map>
+          <html>
+          <head>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+          <script src="https://www.google.com/jsapi"> </script>
+          <script src="https://www.google.com/uds/modules/gviz/gviz-api.js"></script>
+          <script type="text/javascript" src="https://www.google.com/jsapi"></scriptpt type="text/javascript" src="https://www.google.com/jsapi"></script>
+          <script src="http://code.jquery.com/jquery-1.10.1.min.js"> </script>
+          <script src="./.js/papaparse.min.js"></script>
+          <script type="text/javascript" src="./.js/taffy-min.js"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+          <script src="multiselect/js/jquery.bootstrap.treeselect.js"></script>
+
+          <meta charset='utf-8' />
+          <title></title>
+          <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+          <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+          <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+
+         <style>
+            .mapboxgl-popup-content {
+                overflow-y: scroll;
+                overflow-x: scroll;
+          }
+         </style>
+
+
             
             <div class="tab-pane fade show active"
                  id="ofrezco"
                  role="tabpanel"
                  aria-labelledby="ofrezco-tab">
-
               <div class="card border-top-0 rounded-0 rounded-bottom">
                 
                 <div class="card-body">
+                   <div id="map_ofrezco", height: 200px, width: 50%, background-color: powderblue></div>
 
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=10&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+                   <nav id="menu"></nav>
+                  
+
+                 <script src="./mapa.js"></script>
+                 <script>
+                 createdatabase("Ofrezco","map_ofrezco");
+                 </script>
 
                 </div>
           
@@ -136,11 +219,12 @@
                 
                 <div class="card-body">
 
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=9&amp;l=col17&amp;y=4&amp;tmplt=4&amp;hml=TWO_COL_LAT_LNG"></iframe>
+                   <div id="map_necesito", height: 200px, width: 50%, background-color: powderblue></div>
+
+                 <script src="./mapa.js"></script>
+                 <script>
+                 createdatabase("Necesito","map_necesito");
+                 </script>
 
                 </div>
           
