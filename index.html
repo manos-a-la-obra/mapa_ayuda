@@ -215,14 +215,15 @@
 
  
 
-                      <div id="menu" style="left:0;"> </div>
 
 
-                 <div id="mapa"></div>
+                 <div id="mapa">
+                  <div id="menu" style="left:0;"> </div>
                  <script src="./mapa.js"></script>
                  <script>
                  createdatabase("Ofrezco","mapa","menu");
                  </script>
+                 </div>
 
                 </div>
           
@@ -237,7 +238,6 @@
               
               <div class="card border-top-0 rounded-0 rounded-bottom">
                 
-                <div class="card-body">
                    <style>
                    #menu_necesito {
                       overflow: hidden;
@@ -274,13 +274,13 @@
                   } 
 
                  #menu_necesito a.active {
-                    background-color: #3887be;
+                    background-color: #DC143C;
                     color: #ffffff;
                  }
-
-                 #menu_necesito a.active:hover {
-                    background: #3074a4;
+                 #menu a.active:hover {
+                    background: #800000;
                  }
+
                  </style>
 
                   <style>
@@ -298,12 +298,14 @@
 
  
 
+                <div class="card-body">
 
-                      <div id="menu_necesito" style="left:0;"> </div>
-		 <div id="mapa_necesito"></div>
+		 <div id="mapa_necesito">
+                 <div id="menu_necesito" style="left:0;"> </div>
                  <script>
                  createdatabase("Necesito","mapa_necesito","menu_necesito");
                  </script>
+                 </div>
 
                 </div>
           
