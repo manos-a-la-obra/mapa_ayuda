@@ -7,10 +7,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiYnV6b2hlcmJlcnQiLCJhIjoibXJXclpEVSJ9.YxiPmO7Q
 var data_base;
 var n_categories = 14;
 var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
-var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
 var general_stops = {"Necesito":[["today","#602320"],["three","#a32020"],["week","#e0301e"],["more","#eb8c00"]],
-                    "Ofrezco":[["today","#602320"],["three","#a32020"],["week","#e0301e"],["more","#eb8c00"]]};
+                    "Ofrezco":[["today","#002366"],["three","#0038A8"],["week","#4169E1"],["more","#9BDDFF"]]};
 function createdatabase(kind,container){
     getting_db(kind,container);
 }
@@ -62,12 +61,12 @@ function create_selectors(db,kind,map_container){
     //separate_data(db,sel,"Necesito");
     //var sel = 'b';
     var layers = separate_data(db,kind,map);//,add_layer);
-    //create_bottoms();
     //callback();
 }
 
 
 function separate_data(data,kind,map){
+     var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
    var filter_entry = {};
    filter_entry["title"] = kind;
@@ -76,7 +75,8 @@ function separate_data(data,kind,map){
 
    console.log(categories);
    //for (var i = 0;  i< n_categories; i++){
-   for (var i = 0;  i< 1; i++){
+   map.on('load', function () {
+   for (var i = 0;  i< 13; i++){
       var entry = categories[i];
       var key_entry = {};
       key_entry[entry] = true;
@@ -86,11 +86,12 @@ function separate_data(data,kind,map){
       var data_geo = {//"id": "point",
                  "type": "geojson",
                  "data": {"type": "FeatureCollection",
-                          "features":select_data
-                         }
+                          "features":select_data,
+                         },
                };
       console.log(data_geo);
-      var layer = {'id': toggleableLayerIds[i],
+      var layer = {
+          "id": toggleableLayerIds[i],
           'source': data_geo,
           "type": "circle",
           'layout': {'visibility': 'visible'
@@ -102,27 +103,28 @@ function separate_data(data,kind,map){
                  type: "categorical",
                  stops: general_stops[kind]
                              }
-                 }
+                 },
             };
-         console.log(toggleableLayerIds[i]);
-         map.on('load', function () {
-             map.addLayer(layer);
-         });
-         map.on('click',toggleableLayerIds[i], function (e) {
-           new mapboxgl.Popup()
+       console.log(layer);
+            //function layer_f(){map.addLayer(layer);}
+             //layer_f();
+        map.addLayer(layer);
+        map.on('click',toggleableLayerIds[i], function (e) {
+          new mapboxgl.Popup()
             .setLngLat(e.features[0].geometry.coordinates)
             .setHTML(e.features[0].properties.description)
             .addTo(map);
          });
      
-        // Change the cursor to a pointer when the mouse is over the places layer.
         map.on('mouseenter', toggleableLayerIds[i], function () {
             map.getCanvas().style.cursor = 'pointer';
         });
-    };
+         };
+         });
+    //create_bottoms(map);
 };
 
-function create_bottoms(){
+function create_bottoms(map){
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 

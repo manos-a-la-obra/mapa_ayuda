@@ -72,49 +72,8 @@
         }
     </style>
 
-    <style>
-    #menu {
-        background: #fff;
-        position: absolute;
-        z-index: 1;
-        top: 10px;
-        right: 10px;
-        border-radius: 3px;
-        width: 120px;
-        border: 1px solid rgba(0,0,0,0.4);
-        font-family: 'Open Sans', sans-serif;
-    }
 
-    #menu a {
-        font-size: 13px;
-        color: #404040;
-        display: block;
-        margin: 0;
-        padding: 0;
-        padding: 10px;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(0,0,0,0.25);
-        text-align: center;
-    }
 
-    #menu a:last-child {
-        border: none;
-    }
-
-    #menu a:hover {
-        background-color: #f8f8f8;
-        color: #404040;
-    }
-
-    #menu a.active {
-        background-color: #3887be;
-        color: #ffffff;
-    }
-
-    #menu a.active:hover {
-        background: #3074a4;
-    }
-    </style>
     <div class="container-fluid">
 
       <div class="row">
@@ -194,14 +153,67 @@
               <div class="card border-top-0 rounded-0 rounded-bottom">
                 
                 <div class="card-body">
-                   <div id="map_ofrezco", height: 200px, width: 50%, background-color: powderblue></div>
+                  <style>
+                  #mapa {
+                     position:relative;; 
+                     top:0; 
+                     bottom:0; 
+                     width:100%; 
+                     padding: 0px;
+                     height: 4000x;
+                     }
+                   </style>
+
+                   <style>
+                   #menu {
+                      background: #fff;
+                      position: absolute;
+                      z-index: 1;
+                      top: 20px;
+                      right: 22px;
+                      border-radius: 3px;
+                      width: 145px;
+                      border: 1px solid rgba(0,0,0,0.4);
+                      font-family: 'Open Sans', sans-serif;
+                   }
+
+                  #menu a {
+                      font-size: 15px;
+                      color: #404040;
+                      display: block;
+                      margin: 0;
+                      padding: 05px;
+                      text-decoration: none;
+                      border-bottom: 1px solid rgba(0,0,0,0.25);
+                      text-align: center;
+                 }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+    </style>
+ 
 
                    <nav id="menu"></nav>
-                  
+                   <div id="mapa"></div>
 
                  <script src="./mapa.js"></script>
                  <script>
-                 createdatabase("Ofrezco","map_ofrezco");
+                 createdatabase("Ofrezco","mapa");
                  </script>
 
                 </div>
@@ -219,12 +231,13 @@
                 
                 <div class="card-body">
 
-                   <div id="map_necesito", height: 200px, width: 50%, background-color: powderblue></div>
 
                  <script src="./mapa.js"></script>
-                 <script>
-                 createdatabase("Necesito","map_necesito");
-                 </script>
+                 <div id="map_necesito"></div>
+                 <!script>
+                 <!createdatabase("Necesito","map_necesito");
+                 </script>>
+                 <nav id="menu"></nav>
 
                 </div>
           
