@@ -63,12 +63,13 @@
 
     <style>
         .mapboxgl-popup {
+        z-index: 4;
         max-width: 400px;
         font: 10px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
         border-radius: 3px;
         width: 200px;
         border: 1px solid rgba(0.5,0.5,0.5,0.4);
-        background-color: #5cb85c;
+        background-color: #FAFAFA;
         }
     </style>
 
@@ -111,6 +112,7 @@
                  id="necesito-tab"
                  data-toggle="tab"
                  href="#necesito"
+                 min-height = 1000px;
                  role="tab"
                  aria-controls="necesito">Necesito</a>
             </li>
@@ -136,6 +138,7 @@
           <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
           <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
           <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+          <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
 
          <style>
             .mapboxgl-popup-content {
@@ -153,67 +156,75 @@
               <div class="card border-top-0 rounded-0 rounded-bottom">
                 
                 <div class="card-body">
-                  <style>
-                  #mapa {
-                     position:relative;; 
-                     top:0; 
-                     bottom:0; 
-                     width:100%; 
-                     padding: 0px;
-                     height: 4000x;
-                     }
-                   </style>
-
                    <style>
+
+
+                  
                    #menu {
+                      overflow: hidden;
                       background: #fff;
                       position: absolute;
-                      z-index: 1;
                       top: 20px;
                       right: 22px;
+                      z-index: 2;
                       border-radius: 3px;
                       width: 145px;
                       border: 1px solid rgba(0,0,0,0.4);
                       font-family: 'Open Sans', sans-serif;
                    }
-
+                  
                   #menu a {
-                      font-size: 15px;
+                      font-size: 12px;
                       color: #404040;
                       display: block;
+                      z-index: 2;
                       margin: 0;
-                      padding: 05px;
+                      padding: 01px;
                       text-decoration: none;
                       border-bottom: 1px solid rgba(0,0,0,0.25);
                       text-align: center;
                  }
 
-    #menu a:last-child {
-        border: none;
-    }
+                 #menu a:last-child {
+                       border: none;
+                  }
 
-    #menu a:hover {
-        background-color: #f8f8f8;
-        color: #404040;
-    }
+                 #menu a:hover {
+                    background-color: #f8f8f8;
+                    color: #404040;
+                  } 
 
-    #menu a.active {
-        background-color: #3887be;
-        color: #ffffff;
-    }
+                 #menu a.active {
+                    background-color: #3887be;
+                    color: #ffffff;
+                 }
 
-    #menu a.active:hover {
-        background: #3074a4;
-    }
-    </style>
+                 #menu a.active:hover {
+                    background: #3074a4;
+                 }
+                 </style>
+                  <style>
+                  #mapa {
+                     position:absolute; 
+                     top:10; 
+                     bottom:10; 
+                     width:100%; 
+                     padding: 0px;
+                     height: 100%;
+                     max-height: auto;
+                     z-index = 1;
+                     }
+                   </style>
+
  
 
-                   <nav id="menu"></nav>
-                   <div id="mapa"></div>
+                      <div id="menu" style="left:0;"> </div>
 
+
+                 <div id="mapa"></div>
                  <script src="./mapa.js"></script>
                  <script>
-                 createdatabase("Ofrezco","mapa");
+                 createdatabase("Ofrezco","mapa","menu");
                  </script>
 
                 </div>
@@ -231,13 +242,10 @@
                 
                 <div class="card-body">
 
-
                  <script src="./mapa.js"></script>
-                 <div id="map_necesito"></div>
-                 <!script>
-                 <!createdatabase("Necesito","map_necesito");
-                 </script>>
-                 <nav id="menu"></nav>
+                 <script>
+                 createdatabase("Necesito","map_necesito","menu_necesito");
+                 </script>
 
                 </div>
           

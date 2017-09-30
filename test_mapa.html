@@ -137,12 +137,12 @@ var n_categories = 14;
 var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
 var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
-function createdatabase(card){
-    getting_db(card);
+function createdatabase(card,a_var){
+    getting_db(card,a_var);
 }
 
 
-function getting_db(card){
+function getting_db(card,a_var){
     // Document
     // directamente por tabla
     var googlesheet = "https://docs.google.com/spreadsheets/d/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/gviz/tq?tq=select%20A%20B%20C%20R%20S%20T&sheet={Form Responses 1}"
@@ -152,12 +152,12 @@ function getting_db(card){
              callback:function(){
              var query = new google.visualization.Query(googlesheet);
              query.setQuery("SELECT *"); 
-             query.send(function(response){handleQueryResponse(response,card)});
+             query.send(function(response){handleQueryResponse(response,card,a_var)});
              }
    })
    }
 
-function handleQueryResponse(response,card){
+function handleQueryResponse(response,card,a_var){
        if (response.isError()) {
             alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         }
@@ -172,23 +172,19 @@ function handleQueryResponse(response,card){
                       parseRow(row);
                   },
                   complete: function() {
-                          create_selectors(db,card);
+                          create_selectors(db,card,a_var);
                           console.log("All results");
                  }});
         }
 
 
-function create_selectors(db,card){
-    var sel = 'a';
-    //separate_data(db,sel,"Necesito");
-    //var sel = 'b';
-    separate_data(db,sel,card);
-    create_bottoms();
-    //callback();
+function create_selectors(db,card,a_var){
+    separate_data(db,card);
+    create_bottoms(a_var);
 }
 
 
-function separate_data(data,selector,kind){
+function separate_data(data,kind){
 
    var filter_entry = {};
    filter_entry["title"] = kind;
@@ -238,11 +234,12 @@ function separate_data(data,selector,kind){
     })
 };
 
-function create_bottoms(){
+function create_bottoms(a_var){
+    var a = document.getElementById(a_var);
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 
-         var link = document.createElement('a');
+         var link = document.createElement(a);
          link.href = '#';
          link.className = 'active';
          link.textContent = id;
@@ -371,8 +368,7 @@ function get_categories(line,elem){
     //console.log(line_f);
     return elem;
 }
-
-createdatabase("Necesito");
+createdatabase("Necesito","menu");
 
 
 
