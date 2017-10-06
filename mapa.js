@@ -1,11 +1,15 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnV6b2hlcmJlcnQiLCJhIjoibXJXclpEVSJ9.YxiPmO7Q5QZrOGCuOsAYQg';
 
 var data_base;
-var n_categories = 14;
-var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
+var n_categories = 13;
+var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpastiendasdecampana","ropa","gasolina","otro"]; 
 
-var general_stops = {"Necesito":[["today","#602320"],["three","#a32020"],["week","#e0301e"],["more","#eb8c00"]],
-                    "Ofrezco":[["today","#002366"],["three","#0038A8"],["week","#4169E1"],["more","#9BDDFF"]]};
+var toggleableLayerIds = ["Necesito","Ofrezco","Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
+
+var general_stops = [["Necesito","#602320"],["Ofrezco","#002366"]]
+
+var iconos = [ "harbor", "harbor", "harbor", "harbor", "harbor", "harbor", "harbor", "harbor"]
+
 function createdatabase(kind,container,menu){
     getting_db(kind,container,menu);
 }
@@ -65,8 +69,8 @@ function create_selectors(db,kind,map_container,menu){
 }
 
 
+
 function separate_data(data,kind,map){
-     var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
    var filter_entry = {};
    filter_entry["title"] = kind;
@@ -76,12 +80,25 @@ function separate_data(data,kind,map){
    console.log(categories);
    //for (var i = 0;  i< n_categories; i++){
    map.on('load', function () {
-   for (var i = 0;  i< 13; i++){
-      var entry = categories[i];
+   for (var i = 2;  i< 15; i++){
+      var entry = categories[i-2];
       var key_entry = {};
       key_entry[entry] = true;
+      create_layer(data,key_entry,i,map);
+   };
+   var entry = categories[i];
+   var key_entry = {};
+   key_entry["title"] = "Necesito";
+   create_layer(data,key_entry,0,map);
+   key_entry["title"] = "Ofrezco";
+   create_layer(data,key_entry,1,map);
+   
+   
+   });
+}
 
-      var select_data = data().filter(filter_entry,key_entry).select("geojson");
+function create_layer(data,key_entry,i,map){
+      var select_data = data().filter(key_entry).select("geojson");
 
       var data_geo = {//"id": "point",
                  "type": "geojson",
@@ -94,23 +111,21 @@ function separate_data(data,kind,map){
           "id": toggleableLayerIds[i],
           'source': data_geo,
           "type": "circle",
-          'layout': {'visibility': 'visible'
+          'layout': {'visibility': 'none'
                     },
           'paint': {
              'circle-radius': 3,
              'circle-color': {
-                 property: "time",
+                 property: "title",
                  type: "categorical",
-                 stops: general_stops[kind]
+                 stops: general_stops 
                              }
                  },
             };
-       console.log(layer);
-            //function layer_f(){map.addLayer(layer);}
-             //layer_f();
+        console.log(layer);
         map.addLayer(layer);
         map.on('click',toggleableLayerIds[i], function (e) {
-          new mapboxgl.Popup()
+        new mapboxgl.Popup()
             .setLngLat(e.features[0].geometry.coordinates)
             .setHTML(e.features[0].properties.description)
             .addTo(map);
@@ -119,40 +134,36 @@ function separate_data(data,kind,map){
         map.on('mouseenter', toggleableLayerIds[i], function () {
             map.getCanvas().style.cursor = 'pointer';
         });
-         };
-         });
-};
+}
 
 function create_bottoms(map,menu){
-     var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
+    
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 
          var link = document.createElement('a');
          link.href = '#';
-         link.className = 'active';
+         link.className = 'inactive';
          link.textContent = id;
          link.setAttribute('horizontal', '');
 
-        link.onclick = function (e) {
+         link.onclick = function (e) {
+            //window.alert(JSON.stringify(e));
+            for (var j = 0; j < toggleableLayerIds.length; j++) {
+                 var layer = toggleableLayerIds[j];
+                 map.setLayoutProperty(layer, 'visibility', 'none');
+                 layer.className = 'inactive';
+            };
             var clickedLayer = this.textContent;
             e.preventDefault();
             e.stopPropagation();
+            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            this.className = 'active';
+            }
+         var layers = document.getElementById(menu);
+         layers.appendChild(link);
+    };
 
-            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-            if (visibility === 'visible') {
-               map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-               this.className = '';
-            } else {
-                this.className = 'active';
-                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-             }
-       };
-  
-
-    var layers = document.getElementById(menu);
-    layers.appendChild(link);
-    }
 }
 
 function wrapper_parseRow(data,db){
@@ -171,11 +182,11 @@ function wrapper_parseRow(data,db){
                           "description": get_message(row),
                           "time": get_time(row.data[0][0])};
         elem = get_categories(row.data[0][2],elem); // Categories
-         elem["geojson"] = {"geometry": geom,"id":"points","properties":properties,"type":"circle"};
+        elem["geojson"] = {"geometry": geom,"id":"points","properties":properties,"type":"circle"};
         elem["title"] = row.data[0][1]; 
         db.insert(elem); 
 	};
-    };
+      };
     };
     return parseRow
 }
@@ -255,7 +266,6 @@ String.prototype.replaceAll = function(search, replacement) {
 
 function get_categories(line,elem){
     line = RemoveAccents(line);
-    //console.log(line);
     for (var i =0; i < n_categories-1; i++){
         if (line.search(categories[i])> -1){
           elem[categories[i]] = true;
@@ -265,13 +275,17 @@ function get_categories(line,elem){
           elem[categories[i]] = false;
        }
      };
-     if (line != ""){
+    line = getotro(line,elem);
+    return elem;
+ }
+
+function getotro(line,elem){
+    if (line != ""){
         elem[categories[n_categories-1]] = true;
     }
     else{
         elem[categories[n_categories-1]] = false;
     };
-    //console.log(line_f);
     return elem;
 }
 
