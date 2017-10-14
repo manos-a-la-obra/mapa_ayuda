@@ -4,18 +4,38 @@ var data_base;
 var n_categories = 13;
 var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpastiendasdecampana","ropa","gasolina","otro"]; 
 
-var toggleableLayerIds = ["Necesito","Ofrezco","Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
+var toggleableLayerIds = ["Todo","Necesito","Ofrezco","Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
 var general_stops = [["Necesito","#602320"],["Ofrezco","#002366"]]
 
-var iconos = [ "harbor", "harbor", "harbor", "harbor", "harbor", "harbor", "harbor", "harbor"]
 
-function createdatabase(kind,container,menu){
-    getting_db(kind,container,menu);
+var generate_styles = (function(){
+    var icons = {};
+    icons["Necesito"] = {}
+    icons["Ofrezco"] = {}
+    for (var i=0; i < n_categories; i++){
+      // Here, I am creating a json for alk icons for all catetogies,
+      // Ideally, It is going to be called early
+      var sub = categories[i];
+      var index = get_style_image("l");
+      console.log(index);
+      icons["Necesito"][sub] =  index;
+    }
+    console.log(icons);
+    return icons;
+})();
+
+
+//var icon_marker = L.icon(
+
+//);
+
+function createdatabase(container,menu){
+    getting_db(container,menu);
 }
 
 
-function getting_db(kind,container,menu){
+function getting_db(container,menu){
     // Document
     // directamente por tabla
     var googlesheet = "https://docs.google.com/spreadsheets/d/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/gviz/tq?tq=select%20A%20B%20C%20R%20S%20T&sheet={Form Responses 1}"
@@ -25,12 +45,12 @@ function getting_db(kind,container,menu){
              callback:function(){
              var query = new google.visualization.Query(googlesheet);
              query.setQuery("SELECT *"); 
-             query.send(function(response){handleQueryResponse(response,kind,container,menu)});
+             query.send(function(response){handleQueryResponse(response,container,menu)});
              }
             })
    }
 
-function handleQueryResponse(response,kind,container,menu){
+function handleQueryResponse(response,container,menu){
        if (response.isError()) {
             alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         }
@@ -45,26 +65,29 @@ function handleQueryResponse(response,kind,container,menu){
                       parseRow(row);
                   },
                   complete: function() {
-                          create_selectors(db,kind,container,menu);
                           console.log("All results");
+                          create_selectors(db,container,menu);
                  }});
         }
 
 
-function create_selectors(db,kind,map_container,menu){
+function create_selectors(db,map_container,menu){
+    console.log(menu)
+
+
+
     var map = new mapboxgl.Map({
        container: map_container,	
        style: 'mapbox://styles/buzoherbert/cj827abvc9bnr2rmscyivgxpb',
        center: [-99.1831799, 19.471516],
        zoom: 4
     });
-    //separate_data(db,sel,"Necesito");
-    //var sel = 'b';
-    var layers = separate_data(db,kind,map);//,add_layer);
+    separate_data(db,"Necesito",map);
+    //var sel = 'a';
+    //var layers = separate_data(db,kind,map);//,add_layer);
     create_bottoms(map,menu);
     map.addControl(new mapboxgl.FullscreenControl());
     map.resize();
-
     //callback();
 }
 
@@ -72,57 +95,72 @@ function create_selectors(db,kind,map_container,menu){
 
 function separate_data(data,kind,map){
 
-   var filter_entry = {};
-   filter_entry["title"] = kind;
-   
-   console.log(data().get());
-
-   console.log(categories);
    //for (var i = 0;  i< n_categories; i++){
    map.on('load', function () {
-   for (var i = 2;  i< 15; i++){
-      var entry = categories[i-2];
+   for (var i = 3;  i< 16; i++){
+      var entry = categories[i-3];
       var key_entry = {};
       key_entry[entry] = true;
-      create_layer(data,key_entry,i,map);
+      var selection = select_data(data,key_entry);
+      create_layer(selection,key_entry,i,map);
    };
    var entry = categories[i];
    var key_entry = {};
+   var selection = select_data(data,key_entry);
    key_entry["title"] = "Necesito";
-   create_layer(data,key_entry,0,map);
+   create_layer(selection,key_entry,1,map);
+
+   var key_entry = {};
    key_entry["title"] = "Ofrezco";
-   create_layer(data,key_entry,1,map);
+   var selection = select_data(data,key_entry);
+   create_layer(selection,key_entry,2,map);
    
+   var selection = get_all_data(data);
+   create_layer(selection,key_entry,0,map);
    
    });
 }
 
-function create_layer(data,key_entry,i,map){
-      var select_data = data().filter(key_entry).select("geojson");
 
+function select_data(data,key_entry){
+      var selection = data().filter(key_entry).select("geojson");
+      console.log(key_entry);
+      return selection;
+      size = Object.keys(selection).length;
+      for( var i=0; i < size; i++){
+         var item = selection[i];
+         console.log(item);
+         console.log(generate_styles["Necesito"]["comida"]);
+         item["properties"]["icon"] = generate_styles["Necesito"]["comida"];
+         selection[i] = item;
+         console.log(item);
+      };
+      return selection;
+}
+
+
+function get_all_data(data){
+     return data().select("geojson");
+}
+
+function create_layer(data,key_entry,i,map){
+      console.log(i);
+      console.log(data);
       var data_geo = {//"id": "point",
                  "type": "geojson",
                  "data": {"type": "FeatureCollection",
-                          "features":select_data,
+                          "features":data
                          },
                };
-      console.log(data_geo);
       var layer = {
           "id": toggleableLayerIds[i],
           'source': data_geo,
-          "type": "circle",
-          'layout': {'visibility': 'none'
+          "type": "symbol",
+          'layout': {'visibility': 'visible',
+                     "icon-image": "{icon}-15",
+                     "icon-size":1.5
                     },
-          'paint': {
-             'circle-radius': 3,
-             'circle-color': {
-                 property: "title",
-                 type: "categorical",
-                 stops: general_stops 
-                             }
-                 },
             };
-        console.log(layer);
         map.addLayer(layer);
         map.on('click',toggleableLayerIds[i], function (e) {
         new mapboxgl.Popup()
@@ -137,31 +175,33 @@ function create_layer(data,key_entry,i,map){
 }
 
 function create_bottoms(map,menu){
+    console.log(menu);
     
     for (var i = 0; i < toggleableLayerIds.length; i++) {
          var id = toggleableLayerIds[i];
 
          var link = document.createElement('a');
-         link.href = '#';
          link.className = 'inactive';
+         link.id = id;
          link.textContent = id;
          link.setAttribute('horizontal', '');
 
          link.onclick = function (e) {
             //window.alert(JSON.stringify(e));
+            //Apaga todos los selectores.
             for (var j = 0; j < toggleableLayerIds.length; j++) {
-                 var layer = toggleableLayerIds[j];
-                 map.setLayoutProperty(layer, 'visibility', 'none');
-                 layer.className = 'inactive';
+                 var layerID = toggleableLayerIds[j];
+                 var otro_clickedLayer = layerID;
+                 map.setLayoutProperty(layerID, 'visibility', 'none');
+                 document.getElementById(layerID).className = 'inactive';
             };
-            var clickedLayer = this.textContent;
+            document.getElementById(this.id).className = 'active';
             e.preventDefault();
             e.stopPropagation();
-            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-            this.className = 'active';
+            map.setLayoutProperty(this.id, 'visibility', 'visible');
+              this.className = 'active';
             }
-         var layers = document.getElementById(menu);
-         layers.appendChild(link);
+         menu.appendChild(link);
     };
 
 }
@@ -287,6 +327,26 @@ function getotro(line,elem){
         elem[categories[n_categories-1]] = false;
     };
     return elem;
+}
+
+
+function get_style_image(file){
+
+    var sheet = (function(){
+       var style = document.createElement("style");
+       // Add a media (and/or media query) here if you'd like!
+       // style.setAttribute("media", "screen")
+       // style.setAttribute("media", "only screen and (max-width : 1024px)")
+       // WebKit hack :(
+       style.appendChild(document.createTextNode(""));
+       // Add the <style> element to the page
+       document.head.appendChild(style);
+       return style.sheet;
+     })();
+     console.log(sheet.cssRules);
+     sheet.insertRule("marker { background-image: url('Refugio ROJO.png'); background-size: cover; width: 50px; height: 50px; border-radius: 50%; cursor: pointer;}",0);
+     console.log(sheet.cssRules);
+     return sheet;
 }
 
 //createdatabase("Necesito");

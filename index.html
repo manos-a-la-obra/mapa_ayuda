@@ -201,27 +201,31 @@
                  }
                  </style>
                   <style>
-                  #mapa {
-                     position:absolute; 
+                  #mapa { 
                      top:10; 
                      bottom:10; 
                      width:100%; 
                      padding: 0px;
-                     height: 100%;
+                     height: 85vh;
                      max-height: auto;
                      z-index = 1;
                      }
                    </style>
+                   <style>
+                   .marker {
+                      background-size: cover;
+                      width: 5px;
+                      height: 5px;
+                      border-radius: 50%;
+                      cursor: pointer;
+                      background-image: url("agua_rojo.png");
+                   }
+                   </style>
 
- 
-
-                <div id='map'></div>
-                 <div id="mapa">
+                <div id="mapa">
                   <div id="menu" style="left:0;"> </div>
-                 <script src="./mapa.js"></script>
-                 <script>
-                 createdatabase("Ofrezco","mapa","menu");
-                 </script>
+                  <script src="./mapa.js"></script>
+                  <script> createdatabase(mapa,menu) </script>
                  </div>
 
                 </div>
@@ -230,88 +234,6 @@
 
             </div>
             
-            <div class="tab-pane fade"
-                 id="necesito"
-                 role="tabpanel"
-                 aria-labelledby="necesito-tab">
-              
-              <div class="card border-top-0 rounded-0 rounded-bottom">
-                
-                   <style>
-                   #menu_necesito {
-                      overflow: hidden;
-                      background: #fff;
-                      position: absolute;
-                      top: 20px;
-                      right: 22px;
-                      z-index: 2;
-                      border-radius: 2px;
-                      width: 140px;
-                      border: 1px solid rgba(0,0,0,0.4);
-                      font-family: 'Open Sans', sans-serif;
-                   }
-                  
-                  #menu_necesito a {
-                      font-size: 12px;
-                      color: #404040;
-                      display: block;
-                      z-index: 2;
-                      margin: 0;
-                      padding: 01px;
-                      text-decoration: none;
-                      border-bottom: 1px solid rgba(0,0,0,0.25);
-                      text-align: center;
-                 }
-
-                 #menu_necesito a:last-child {
-                       border: none;
-                  }
-
-                 #menu_necesito a:hover {
-                    background-color: #f8f8f8;
-                    color: #404040;
-                  } 
-
-                 #menu_necesito a.active {
-                    background-color: #DC143C;
-                    color: #ffffff;
-                 }
-                 #menu a.active:hover {
-                    background: #800000;
-                 }
-
-                 </style>
-
-                  <style>
-                  #mapa_necesito {
-                     position:absolute; 
-                     top:10; 
-                     bottom:10; 
-                     width:100%; 
-                     padding: 0px;
-                     height: 100%;
-                     max-height: auto;
-                     z-index = 1;
-                     }
-                   </style>
-
- 
-
-                <div class="card-body">
-
-		 <div id="mapa_necesito">
-                 <div id="menu_necesito" style="left:0;"> </div>
-                 <script>
-                 createdatabase("Necesito","mapa_necesito","menu_necesito");
-                 </script>
-                 </div>
-
-                </div>
-          
-              </div>
-
-            </div>
-
           </div>
         
         </div>
