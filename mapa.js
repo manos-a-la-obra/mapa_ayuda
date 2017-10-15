@@ -8,11 +8,19 @@ var toggleableLayerIds = ["Todo","Necesito","Ofrezco","Comida","Agua","Refugio",
 
 var general_stops = [["Necesito","#602320"],["Ofrezco","#002366"]]
 
-
-
-
-
-//);
+var layerIds = {"comida":{"necesito":"comida_rojo.png","ofrezco":"comida_verde.png"},
+"agua":{"necesito":"agua_rojo.png","ofrezco":"agua_verde.png"},
+"refugio":{"necesito":"refugio_rojo.png","ofrezco":"refugio_verde.png"},
+"transporte":{"necesito":"transporte_rojo.png","ofrezco":"transporte_verde.png"},
+"manosvoluntarios":{"necesito":"manos_rojo.png","ofrezco":"manos_verde.png"},
+"asistenciamedica":{"necesito":"asistencia_medica_rojo.png","ofrezco":"asistencia_medica_verde.png"},
+"peritajes":{"necesito":"peritajes_rojo.png","ofrezco":"peritajes_verde.png"},
+"articulosdelimpieza":{"necesito":"articulos_limpieza_rojo.png","ofrezco":"articulos_limpieza_verde.png"},
+"medicamentos":{"necesito":"medicamentos_rojo.png","ofrezco":"medicamentos_verde.png"},
+"carpastiendasdecampana":{"necesito":"carpas_rojo.png","ofrezco":"carpas_verde.png"},
+"ropa":{"necesito":"ropa_rojo.png","ofrezco":"ropa_verde.png"},
+"gasolina":{"necesito":"gasolina_rojo.png","ofrezco":"gasolina_verde.png"},
+"otro":{"necesito":"otros_rojo.png","ofrezco":"otros_verde.png"}}
 
 function createdatabase(container,menu){
     getting_db(container,menu);
@@ -66,15 +74,40 @@ function create_selectors(db,map_container,menu){
        center: [-99.1831799, 19.471516],
        zoom: 4
     });
-    separate_data(db,"Necesito",map);
+    get_all_layers(db,map);
+    //separate_data(db,"Necesito",map);
     //var sel = 'a';
     //var layers = separate_data(db,kind,map);//,add_layer);
-    create_bottoms(map,menu);
+    //create_bottoms(map,menu);
     map.addControl(new mapboxgl.FullscreenControl());
     map.resize();
     //callback();
 }
 
+
+function get_all_layers(data,map){
+   var key_necesito = {}
+   key_necesito["title"] = "Necesito";
+
+   var key_ofrezco = {}
+   key_ofrezco["title"] = "Ofrezco";
+
+   for (var i = 0;  i< 13; i++){
+      var entry = categories[i];
+      var key_entry = {};
+      key_entry[entry] = true;
+      selection = get_filter(data,key_ofrezco,key_entry);
+      create_layer_element(selection,entry,"ofrezco",map);
+
+      selection = get_filter(data,key_necesito,key_entry);
+      create_layer_element(selection,entry,"necesito",map);
+   };
+}
+
+function get_filter(data,key_entry,key_sub){
+    var selection = data().filter(key_entry,key_sub).select("geojson");
+    return selection
+}
 
 function separate_data(data,kind,map){
 
@@ -104,10 +137,6 @@ function separate_data(data,kind,map){
    });
 }
 
-function select_data_nested(data,key_entry,key){
-      var selection = data().filter(key_entry,key).select("geojson");
-      console.log(key_entry);
-    }
 
 function select_data(data,key_entry){
       var selection = data().filter(key_entry).select("geojson");
@@ -130,25 +159,48 @@ function get_all_data(data){
      return data().select("geojson");
 }
 
-function create_layer_element(data,key_entry,i,map){
-      console.log(i);
+function create_layer_element(data,cat,sub,map){
+  console.log(cat);
+  var img = new Image();//document.createElement('img');
+  var file = layerIds[cat][sub];
+  img.className = "comida";
+  img.width = 20;
+  img.height = 20;
+  img.crossOrigin = "Anonymous";
+  img.src = file;
+  img.onload  = function(){
+      console.log(file);
+      var layer_id= file.replace('.png',"");
+      console.log(layer_id);
+      map.addImage(layer_id, img);
       console.log(data);
-      data.forEach(function(marker) {
-        var el = document.createElement('div');
-        el.className = 'marker';
-        el.style.backgroundImage = 'url("agua_verde.png")';
-        //el.style.width = '1 px';
-        //el.style.height = '1 px';
-
-        //el.addEventListener('click', function() {
-        //   window.alert(marker["properties"]["description"]);
-        //});
-
-        // add marker to map
-        new mapboxgl.Marker(el)
-          .setLngLat(marker.geometry.coordinates)
-          .addTo(map);
+      var data_geo = {//"id": "point",
+             "type": "geojson",
+             "data": {"type": "FeatureCollection",
+                      "features":data
+                     },
+       };
+      var layer = {
+         "id": layer_id,
+         'source': data_geo,
+         "type": "symbol",
+         'layout': {'visibility': 'visible',
+                   "icon-image": layer_id,
+                   "icon-size":0.5
+                   },
+          };
+    map.addLayer(layer);
+    map.on('click',layer_id, function (e) {
+    new mapboxgl.Popup()
+        .setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(e.features[0].properties.description)
+        .addTo(map);
+     });
+  
+    map.on('mouseenter', layer_id, function () {
+        map.getCanvas().style.cursor = 'pointer';
     });
+  };
 }
 
 function create_layer(data,key_entry,i,map){
@@ -189,7 +241,7 @@ function create_layer(data,key_entry,i,map){
         map.on('mouseenter', toggleableLayerIds[i], function () {
             map.getCanvas().style.cursor = 'pointer';
         });
-  }
+  };
 }
 
 function create_bottoms(map,menu){
