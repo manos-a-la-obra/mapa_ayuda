@@ -9,24 +9,8 @@ var toggleableLayerIds = ["Todo","Necesito","Ofrezco","Comida","Agua","Refugio",
 var general_stops = [["Necesito","#602320"],["Ofrezco","#002366"]]
 
 
-var generate_styles = (function(){
-    var icons = {};
-    icons["Necesito"] = {}
-    icons["Ofrezco"] = {}
-    for (var i=0; i < n_categories; i++){
-      // Here, I am creating a json for alk icons for all catetogies,
-      // Ideally, It is going to be called early
-      var sub = categories[i];
-      var index = get_style_image("l");
-      console.log(index);
-      icons["Necesito"][sub] =  index;
-    }
-    console.log(icons);
-    return icons;
-})();
 
 
-//var icon_marker = L.icon(
 
 //);
 
@@ -92,7 +76,6 @@ function create_selectors(db,map_container,menu){
 }
 
 
-
 function separate_data(data,kind,map){
 
    //for (var i = 0;  i< n_categories; i++){
@@ -121,6 +104,10 @@ function separate_data(data,kind,map){
    });
 }
 
+function select_data_nested(data,key_entry,key){
+      var selection = data().filter(key_entry,key).select("geojson");
+      console.log(key_entry);
+    }
 
 function select_data(data,key_entry){
       var selection = data().filter(key_entry).select("geojson");
@@ -143,7 +130,37 @@ function get_all_data(data){
      return data().select("geojson");
 }
 
+function create_layer_element(data,key_entry,i,map){
+      console.log(i);
+      console.log(data);
+      data.forEach(function(marker) {
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.style.backgroundImage = 'url("agua_verde.png")';
+        //el.style.width = '1 px';
+        //el.style.height = '1 px';
+
+        //el.addEventListener('click', function() {
+        //   window.alert(marker["properties"]["description"]);
+        //});
+
+        // add marker to map
+        new mapboxgl.Marker(el)
+          .setLngLat(marker.geometry.coordinates)
+          .addTo(map);
+    });
+}
+
 function create_layer(data,key_entry,i,map){
+
+  var img = new Image();//document.createElement('img');
+  img.className = "comida";
+  img.width = 20;
+  img.height = 20;
+  img.crossOrigin = "Anonymous";
+  img.src = "agua_verde.png";
+  img.onload  = function(){
+      map.addImage(toggleableLayerIds[i], img);
       console.log(i);
       console.log(data);
       var data_geo = {//"id": "point",
@@ -157,8 +174,8 @@ function create_layer(data,key_entry,i,map){
           'source': data_geo,
           "type": "symbol",
           'layout': {'visibility': 'visible',
-                     "icon-image": "{icon}-15",
-                     "icon-size":1.5
+                     "icon-image": toggleableLayerIds[i],
+                     "icon-size":4
                     },
             };
         map.addLayer(layer);
@@ -172,6 +189,7 @@ function create_layer(data,key_entry,i,map){
         map.on('mouseenter', toggleableLayerIds[i], function () {
             map.getCanvas().style.cursor = 'pointer';
         });
+  }
 }
 
 function create_bottoms(map,menu){
@@ -199,8 +217,9 @@ function create_bottoms(map,menu){
             e.preventDefault();
             e.stopPropagation();
             map.setLayoutProperty(this.id, 'visibility', 'visible');
-              this.className = 'active';
-            }
+            //map.setLayoutProperty(this.id, "icon-image", 'harbor');
+            this.className = 'active';
+          }
          menu.appendChild(link);
     };
 
@@ -218,7 +237,7 @@ function wrapper_parseRow(data,db){
                      };
         var properties = {"title":row.data[0][1], 
                           "name":row.data[0][1], 
-                          "icon": "harbor",
+                          "icon": "monument",
                           "description": get_message(row),
                           "time": get_time(row.data[0][0])};
         elem = get_categories(row.data[0][2],elem); // Categories
@@ -330,24 +349,6 @@ function getotro(line,elem){
 }
 
 
-function get_style_image(file){
-
-    var sheet = (function(){
-       var style = document.createElement("style");
-       // Add a media (and/or media query) here if you'd like!
-       // style.setAttribute("media", "screen")
-       // style.setAttribute("media", "only screen and (max-width : 1024px)")
-       // WebKit hack :(
-       style.appendChild(document.createTextNode(""));
-       // Add the <style> element to the page
-       document.head.appendChild(style);
-       return style.sheet;
-     })();
-     console.log(sheet.cssRules);
-     sheet.insertRule("marker { background-image: url('Refugio ROJO.png'); background-size: cover; width: 50px; height: 50px; border-radius: 50%; cursor: pointer;}",0);
-     console.log(sheet.cssRules);
-     return sheet;
-}
 
 //createdatabase("Necesito");
 
