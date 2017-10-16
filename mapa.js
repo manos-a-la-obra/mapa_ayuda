@@ -6,7 +6,8 @@ var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "a
 
 var toggleableLayerIds = ["Todo","Necesito","Ofrezco","Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
 
-var general_stops = [["Necesito","#602320"],["Ofrezco","#002366"]]
+var general_stops = {"necesito":[["today","#FF8F8B"],["three","#FF8F8B"],["week","#FF8F8B"],["more","#FF8F8B"]],
+                    "ofrezco":[["today","#B8DAC3"],["three","#B8DAC3"],["week","#B8DAC3"],["more","#B8DAC3"]]};
 
 var layerIds = {"comida":{"necesito":"comida_rojo.png","ofrezco":"comida_verde.png"},
 "agua":{"necesito":"agua_rojo.png","ofrezco":"agua_verde.png"},
@@ -70,12 +71,12 @@ function create_selectors(db,map_container,menu){
        center: [-99.1831799, 19.471516],
        zoom: 4
     });
-    get_all_layers(db,map);
+    var list_layers = get_all_layers(db,map);
     //separate_data(db,"Necesito",map);
     //var sel = 'a';
     //var layers = separate_data(db,kind,map);//,add_layer);
     //create_bottoms(map,menu);
-    create_filter_bottoms(map,menu);
+    create_filter_bottoms(map,menu,list_layers,list_layers);
     map.addControl(new mapboxgl.FullscreenControl());
     map.resize();
     //callback();
@@ -115,23 +116,22 @@ function get_filtered_sublayers(subkey){
    return all_layers;
 }
 
-function create_filter_bottoms(map,menu){
-   list_layers = get_all_sublayer_ids();
-   console.log(list_layers);
+function create_filter_bottoms(map,menu,list_layers){
 
    // Todo
-   create_bottoms_layers(map,menu,toggleableLayerIds[0],list_layers,list_layers);
+   var filtered_layers = ["necesito","ofrezco"];
+   create_bottoms_layers(map,menu,toggleableLayerIds[0],list_layers,filtered_layers,'active');
   
-   var filtered_layers = get_filtered_sublayers("necesito");
-   create_bottoms_layers(map,menu,toggleableLayerIds[1],list_layers,filtered_layers);
+   var filtered_layers = ["necesito"];
+   create_bottoms_layers(map,menu,toggleableLayerIds[1],list_layers,filtered_layers,'inactive');
  
-   var filtered_layers = get_filtered_sublayers("ofrezco");
-   create_bottoms_layers(map,menu,toggleableLayerIds[2],list_layers,filtered_layers);
+   var filtered_layers = ["ofrezco"];
+   create_bottoms_layers(map,menu,toggleableLayerIds[2],list_layers,filtered_layers,'inactive');
 
    for (var i = 0;  i< categories.length; i++){
       var entry = categories[i];
       var filtered_layers = get_filtered_layers(entry);
-      create_bottoms_layers(map,menu,toggleableLayerIds[3+i],list_layers,filtered_layers);
+      create_bottoms_layers(map,menu,toggleableLayerIds[3+i],list_layers,filtered_layers,'inactive');
     }
  
    
@@ -154,12 +154,69 @@ function get_all_layers(data,map){
       selection = get_filter(data,key_necesito,key_entry);
       create_layer_element(selection,entry,"necesito",map);
    };
+
+   var selection = get_subfilter(data,key_necesito);
+   create_layer_dots(selection,"necesito",map);
+   
+   var selection = get_subfilter(data,key_ofrezco);
+   create_layer_dots(selection,"ofrezco",map);
+
+   var list_layers = get_all_sublayer_ids();
+   list_layers.push("necesito");
+   list_layers.push("ofrezco");
+   return list_layers;
+
 }
+
+
+function get_subfilter(data,key_entry){
+    var selection = data().filter(key_entry).select("geojson");
+    return selection
+}
+
 
 function get_filter(data,key_entry,key_sub){
     var selection = data().filter(key_entry,key_sub).select("geojson");
     return selection
 }
+
+function create_layer_dots(data,kind,map){
+   map.on('load', function () {
+      console.log(general_stops,kind);
+      var data_geo = {//"id": "point",
+                 "type": "geojson",
+                 "data": {"type": "FeatureCollection",
+                          "features":data,
+                         },
+               };
+      var layer = {
+          "id": kind,
+          'source': data_geo,
+          "type": "circle",
+          'layout': {'visibility': 'visible'
+                    },
+          'paint': {
+             'circle-radius': 3,
+             'circle-color': {
+                 property: "time",
+                 type: "categorical",
+                 stops: general_stops[kind]
+                             }
+                 },
+            };
+        map.addLayer(layer);
+    });
+    map.on('click',kind, function (e) {
+      new mapboxgl.Popup()
+        .setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(e.features[0].properties.description)
+        .addTo(map);
+     });
+    
+    map.on('mouseenter', kind, function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+};
 
 
 function create_layer_element(data,cat,sub,map){
@@ -186,7 +243,7 @@ function create_layer_element(data,cat,sub,map){
          "type": "symbol",
          'layout': {'visibility': 'none',
                    "icon-image": layer_id,
-                   "icon-size":1.5
+                   "icon-size":2.0
                    },
         };
  
@@ -206,10 +263,10 @@ function create_layer_element(data,cat,sub,map){
 }
 
 
-function create_bottoms_layers(map,menu,layer_id,list_layers,filter_layer){
+function create_bottoms_layers(map,menu,layer_id,list_layers,filter_layer,status_bottom){
 
      var link = document.createElement('a');
-     link.className = 'inactive';
+     link.className = status_bottom;
      link.id = layer_id;
      link.textContent = layer_id;
      link.setAttribute('horizontal', '');
@@ -232,7 +289,11 @@ function create_bottoms_layers(map,menu,layer_id,list_layers,filter_layer){
             for (var j = 0; j < filter_layer.length; j++) {
                 map.setLayoutProperty(filter_layer[j], 'visibility', 'visible');
             };
-            this.className = 'active';
+            //this.className = 'active';
+            //console.log(map.getBounds());
+            //var mbounds = map.getBounds();
+            //var lat = [mbounds[LngLat][lng], ]
+            //map.fitBounds(filter_layer[0].getBounds());
           }
          menu.appendChild(link);
     };
