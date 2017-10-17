@@ -61,6 +61,24 @@
     </div>
     </div>
 
+    <style>
+        .mapboxgl-popup {
+        z-index: 4;
+        max-width: 400px;
+        font: 10px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        border-radius: 3px;
+        width: 200px;
+        border: 1px solid rgba(0.5,0.5,0.5,0.4);
+        background-color: #FAFAFA;
+        }
+        .comida{
+            width: 10px;
+            height: 10px;
+        }
+    </style>
+
+
+
     <div class="container-fluid">
 
       <div class="row">
@@ -81,75 +99,115 @@
           
           </div>
 
-          <ul class="nav nav-tabs" id="offerOrNeed" role="tablist">
-            
-            <li class="nav-item">
-              <a class="nav-link active"
-                 id="ofrezco-tab"
-                 data-toggle="tab"
-                 href="#ofrezco"
-                 role="tab"
-                 aria-controls="ofrezco"
-                 aria-expanded="true">Ofrezco</a>
-            </li>
 
-            <li class="nav-item">
-              <a class="nav-link"
-                 id="necesito-tab"
-                 data-toggle="tab"
-                 href="#necesito"
-                 role="tab"
-                 aria-controls="necesito">Necesito</a>
-            </li>
           
-          </ul>
 
-          <div class="tab-content" id="offerOrNeedContent">
-            
-            <div class="tab-pane fade show active"
-                 id="ofrezco"
-                 role="tabpanel"
-                 aria-labelledby="ofrezco-tab">
+          <div style="height:20px"></div>
+          <div class="card border-0" id="offerOrNeedContent">
+          <!Stuff for map>
+          <html>
+          <head>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+          <script src="https://www.google.com/jsapi"> </script>
+          <script src="https://www.google.com/uds/modules/gviz/gviz-api.js"></script>
+          <script type="text/javascript" src="https://www.google.com/jsapi"></scriptpt type="text/javascript" src="https://www.google.com/jsapi"></script>
+          <script src="http://code.jquery.com/jquery-1.10.1.min.js"> </script>
+          <script src="./.js/papaparse.min.js"></script>
+          <script type="text/javascript" src="./.js/taffy-min.js"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+          <script src="multiselect/js/jquery.bootstrap.treeselect.js"></script>
 
-              <div class="card border-top-0 rounded-0 rounded-bottom">
-                
+          <meta charset='utf-8' />
+          <title></title>
+          <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+          <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+          <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+          <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
+
+         <style>
+            .mapboxgl-popup-content {
+                overflow-y: scroll;
+                overflow-x: scroll;
+          }
+         </style>
+
                 <div class="card-body">
+                   <style>
+                   #menu {
+                      overflow: hidden;
+                      background: #fff;
+                      position: absolute;
+                      top: 20px;
+                      right: 22px;
+                      z-index: 2;
+                      border-radius: 2px;
+                      width: 140px;
+                      border: 1px solid rgba(0,0,0,0.4);
+                      font-family: 'Open Sans', sans-serif;
+                   }
+                  
+                  #menu a {
+                      font-size: 12px;
+                      color: #404040;
+                      display: block;
+                      z-index: 2;
+                      margin: 0;
+                      padding: 01px;
+                      text-decoration: none;
+                      border-bottom: 1px solid rgba(0,0,0,0.25);
+                      text-align: center;
+                 }
 
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Ofrezco&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=10&amp;l=col17&amp;y=3&amp;tmplt=3&amp;hml=TWO_COL_LAT_LNG"></iframe>
+                 #menu a:last-child {
+                       border: none;
+                  }
+
+                 #menu a:hover {
+                    background-color: #f8f8f8;
+                    color: #404040;
+                  } 
+
+                 #menu a.active {
+                    background-color: #3887be;
+                    color: #ffffff;
+                 }
+
+                 #menu a.active:hover {
+                    background: #3074a4;
+                 }
+                 </style>
+                  <style>
+                  #mapa { 
+                     top:00; 
+                     bottom:00; 
+                     width:100%; 
+                     padding: 0px;
+                     height: 100vh;
+                     max-height: auto;
+                     z-index = 1;
+                     }
+                   </style>
+                   <style>
+                   .marker {
+                      background-size: cover;
+                      width: 5px;
+                      height: 5px;
+                      border-radius: 50%;
+                      cursor: pointer;
+                      background-image: url("agua_rojo.png");
+                   }
+                   </style>
+
+                <div id="mapa">
+                  <div id="menu" style="left:0;"> </div>
+                  <script src="./mapa.js"></script>
+                  <script> createdatabase(mapa,menu) </script>
+                 </div>
 
                 </div>
           
               </div>
 
-            </div>
-            
-            <div class="tab-pane fade"
-                 id="necesito"
-                 role="tabpanel"
-                 aria-labelledby="necesito-tab">
-              
-              <div class="card border-top-0 rounded-0 rounded-bottom">
-                
-                <div class="card-body">
-
-                  <iframe width="100%"
-                          height="90%"
-                          scrolling="no"
-                          frameborder="no"
-                          src="https://fusiontables.google.com/embedviz?q=select+col17+from+1o5FooJg1a_Ok2Qv_JaurK0-ZhffsN48YxGtfMH_v+where+col1+%3D+&#39;Necesito&#39;&amp;viz=MAP&amp;mapType=terrain&amp;h=false&amp;lat=19.472&amp;lng=-99.161&amp;t=1&amp;z=9&amp;l=col17&amp;y=4&amp;tmplt=4&amp;hml=TWO_COL_LAT_LNG"></iframe>
-
-                </div>
-          
-              </div>
-
-            </div>
-
-          </div>
-        
         </div>
         
         <div class="col-md-4">

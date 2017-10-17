@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://www.google.com/jsapi"> </script>
+<script src="https://www.google.com/uds/modules/gviz/gviz-api.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></scriptpt type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"> </script>
+<script src="./.js/papaparse.min.js"></script>
+<script type="text/javascript" src="./.js/taffy-min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="multiselect/js/jquery.bootstrap.treeselect.js"></script>
+
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+</head>
+<body>
+
+<div>
+        <nav id="menu"></nav>
+	<div id='map'></div>
+
+
+<style>
+#menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+
+
+    #menu b {
+        font-size: 10px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0.0,0.25);
+        text-align: center;
+    }
+
+    #menu b:last-child {
+        border: none;
+    }
+
+    #menu b:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+    #menu b.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu b.active:hover {
+        background: #3074a4;
+    }
+
+
+
+
+</style>
+</div>
+
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYnV6b2hlcmJlcnQiLCJhIjoibXJXclpEVSJ9.YxiPmO7Q5QZrOGCuOsAYQg';
+
+
+var map = new mapboxgl.Map({
+  container: 'map',	
+  style: 'mapbox://styles/buzoherbert/cj827abvc9bnr2rmscyivgxpb',
+  center: [-99.1831799, 19.471516],
+  zoom: 4
+});
+
+var data_base;
+var n_categories = 14;
+var categories = ["comida","agua","refugio", "transporte","manosvoluntarios", "asistenciamedica","peritajes","articulosdelimpieza","medicamentos","carpas, tiendasdecampana","ropa","gasolina","otro"]; 
+var toggleableLayerIds = ["Comida","Agua","Refugio", "Transporte","Manos/Voluntarios", "Asistencia Médica","Peritajes","Artículos de limpieza","Medicamentos","Carpas, Tiendas de Campaña","Ropa","Gasolina","Otro"]; 
+
+function createdatabase(card,a_var){
+    getting_db(card,a_var);
+}
+
+
+function getting_db(card,a_var){
+    // Document
+    // directamente por tabla
+    var googlesheet = "https://docs.google.com/spreadsheets/d/1vHrM6r3sO1f6ylsci_B7z08PrLsYKpG5VywjZXD6l5M/gviz/tq?tq=select%20A%20B%20C%20R%20S%20T&sheet={Form Responses 1}"
+
+   // Loading everything
+   google.load('visualization', '1.0', {
+             callback:function(){
+             var query = new google.visualization.Query(googlesheet);
+             query.setQuery("SELECT *"); 
+             query.send(function(response){handleQueryResponse(response,card,a_var)});
+             }
+   })
+   }
+
+function handleQueryResponse(response,card,a_var){
+       if (response.isError()) {
+            alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+        }
+        var data = response.getDataTable();
+        var db = TAFFY();
+        var parseRow = wrapper_parseRow(data,db);
+        var csv = google.visualization.dataTableToCsv(data);
+
+        // Here Papa parse show up
+        var csv_parsed = Papa.parse(csv,{download:false,
+                  step: function(row){
+                      parseRow(row);
+                  },
+                  complete: function() {
+                          create_selectors(db,card,a_var);
+                          console.log("All results");
+                 }});
+        }
+
+
+function create_selectors(db,card,a_var){
+    separate_data(db,card);
+    create_bottoms(a_var);
+}
+
+
+function separate_data(data,kind){
+
+   var filter_entry = {};
+   filter_entry["title"] = kind;
+   
+
+   categories.forEach(function(entry,index) {
+      var key_entry = {};
+      key_entry[entry] = true;
+
+      var select_data = data().filter(filter_entry,key_entry).select("geojson");
+      var data_geo = {//"id": "point",
+                 "type": "geojson",
+                 "data": {"type": "FeatureCollection",
+                          "features":select_data
+                         }
+               };
+      var label = toggleableLayerIds[index];
+      map.on('load', function () {
+      map.addLayer({
+          'id': label,
+          'source': data_geo,
+          "type": "circle",
+          'layout': {'visibility': 'visible'
+                    },
+          'paint': {
+             'circle-radius': 3,
+             'circle-color': {
+                 property: "title",
+                 type: "categorical",
+                 stops: [ ["Necesito",'#e55e5e'],
+                        ["Ofrezco",'#3bb2d0'] ]
+                             }
+                 }
+            });
+        });
+        map.on('click', label, function (e) {
+           new mapboxgl.Popup()
+            .setLngLat(e.features[0].geometry.coordinates)
+            .setHTML(e.features[0].properties.description)
+            .addTo(map);
+         });
+     
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', toggleableLayerIds, function () {
+            map.getCanvas().style.cursor = 'pointer';
+         });
+    })
+};
+
+function create_bottoms(a_var){
+    var a = document.getElementById(a_var);
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+         var id = toggleableLayerIds[i];
+
+         var link = document.createElement(a);
+         link.href = '#';
+         link.className = 'active';
+         link.textContent = id;
+
+        link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+            if (visibility === 'visible') {
+               map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+               this.className = '';
+            } else {
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+             }
+       };
+  
+
+    var layers = document.getElementById('menu');
+    layers.appendChild(link);
+}
+
+}
+
+function wrapper_parseRow(data,db){
+    function parseRow(row){
+    
+      if(row.data[0][19] != ''){ // Trowing out entries without timestamp
+      if(row.data[0][0] != ''){ // Trowing out entries without timestamp
+        var elem = {};
+        elem["type"]="Feature";
+        var geom = {"type":"Point", 
+                    "coordinates":[parseFloat(row.data[0][19]),parseFloat(row.data[0][18])]
+                     };
+        var properties = {"title":row.data[0][1], 
+                          "name":row.data[0][1], 
+                          "icon": "harbor",
+                          "description": get_message(row)};
+        elem = get_categories(row.data[0][2],elem); // Categories
+         elem["geojson"] = {"geometry": geom,"id":"points","properties":properties,"type":"circle"};
+        elem["title"] = row.data[0][1]; 
+        db.insert(elem); 
+	};
+    };
+    };
+    return parseRow
+}
+
+
+function get_message(row){
+       var line = "<strong>"+row.data[0][0] +" "+row.data[0][1]+"</strong><p> ¿Qué ofrezco/necesito? "+row.data[0][2]+" <\p>";
+       if(row.data[0][5] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>Nombre</strong> "+row.data[0][5] +" <p>";}
+       if(row.data[0][3] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>Lugar</strong> "+row.data[0][3] +","+row.data[0][4]+","+ row.data[0][7] +","+row.data[0][8]+","+row.data[0][9]+"<p>";
+       }
+       if(row.data[0][11] != ''){ // Trowing out entries without timestamp
+           line = line + "<p> <strong>¿Qué tanto puedes dar/necesitas?</strong> "+row.data[0][11] +"<\p> ";
+       }
+       if(row.data[0][6] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Facebook</strong> "+row.data[0][6]+"<\p> ";
+       }
+       if(row.data[0][13] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Teléfono</strong> "+row.data[0][13]+"<\p> ";
+       }
+       if(row.data[0][14] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Email</strong> "+row.data[0][14]+"<\p> ";
+       }
+       if(row.data[0][15] != ''){ // Trowing out entries without timestamp
+          line = line + "<p> <strong>Twitter</strong> "+row.data[0][15]+"<\p> ";
+       }
+       if(row.data[0][10] != ''){ // Trowing out entries without timestamp
+          line = line +"<p> <strong>Comentarios</strong> "+row.data[0][10] +"<\p> ";
+        }
+        return line;
+}
+
+
+function RemoveAccents(strAccents) {
+		var strAccents = strAccents.split('');
+		var strAccentsOut = new Array();
+		var strAccentsLen = strAccents.length;
+		var accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+		var accentsOut = "aaaaaaaaaaaaoooooooooooooeeeeeeeeeccdiiiiiiiiuuuuuuuunnssyyyzz";
+		for (var y = 0; y < strAccentsLen; y++) {
+			if (accents.indexOf(strAccents[y]) != -1) {
+				strAccentsOut[y] = accentsOut.substr(accents.indexOf(strAccents[y]), 1);
+			} else
+				strAccentsOut[y] = strAccents[y];
+		}
+		strAccentsOut = strAccentsOut.join('');
+		return remove_char(strAccentsOut);
+}
+
+
+function remove_char(line){
+    return line.replaceAll(" ",'').replaceAll(",","").replaceAll("-","").replaceAll("/","").toLowerCase();
+}
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+
+function get_categories(line,elem){
+    line = RemoveAccents(line);
+    //console.log(line);
+    for (var i =0; i < n_categories-1; i++){
+        if (line.search(categories[i])> -1){
+          elem[categories[i]] = true;
+          line = line.replaceAll(categories[i], "");
+        }
+        else{
+          elem[categories[i]] = false;
+       }
+     };
+     if (line != ""){
+        elem[categories[n_categories-1]] = true;
+    }
+    else{
+        elem[categories[n_categories-1]] = false;
+    };
+    //console.log(line_f);
+    return elem;
+}
+createdatabase("Necesito","menu");
+
+
+
+</script>
+
+</body>
+</html>
