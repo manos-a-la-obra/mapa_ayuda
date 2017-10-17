@@ -58,7 +58,7 @@ function handleQueryResponse(response,container,menu){
                       parseRow(row);
                   },
                   complete: function() {
-                          console.log("All results");
+                          console.log("Hi there :)");
                           create_selectors(db,container,menu);
                  }});
         }
@@ -97,12 +97,10 @@ function get_all_sublayer_ids(){
 }
 
 function get_filtered_layers(key){
-   console.log(key);
    var all_layers = [];
    for (var subkey in layerIds[key]) {
         all_layers.push(layerIds[key][subkey].replace(".png",""));
    };
-   console.log(all_layers)
    return all_layers;
 }
 
@@ -143,23 +141,25 @@ function get_all_layers(data,map){
 
    var key_ofrezco = {}
    key_ofrezco["title"] = "Ofrezco";
+   
+   var list_obj_layer = [];
 
    for (var i = 0;  i< categories.length; i++){
       var entry = categories[i];
       var key_entry = {};
       key_entry[entry] = true;
       selection = get_filter(data,key_ofrezco,key_entry);
-      create_layer_element(selection,entry,"ofrezco",map);
+      create_layer_element(selection,entry,"ofrezco",map,list_obj_layer);
 
       selection = get_filter(data,key_necesito,key_entry);
-      create_layer_element(selection,entry,"necesito",map);
+      create_layer_element(selection,entry,"necesito",map,list_obj_layer);
    };
 
    var selection = get_subfilter(data,key_necesito);
-   create_layer_dots(selection,"necesito",map);
+   create_layer_dots(selection,"necesito",map,list_obj_layer);
    
    var selection = get_subfilter(data,key_ofrezco);
-   create_layer_dots(selection,"ofrezco",map);
+   create_layer_dots(selection,"ofrezco",map,list_obj_layer);
 
    var list_layers = get_all_sublayer_ids();
    list_layers.push("necesito");
@@ -180,9 +180,8 @@ function get_filter(data,key_entry,key_sub){
     return selection
 }
 
-function create_layer_dots(data,kind,map){
+function create_layer_dots(data,kind,map,list){
    map.on('load', function () {
-      console.log(general_stops,kind);
       var data_geo = {//"id": "point",
                  "type": "geojson",
                  "data": {"type": "FeatureCollection",
@@ -204,7 +203,9 @@ function create_layer_dots(data,kind,map){
                              }
                  },
             };
-        map.addLayer(layer);
+        var layer_obj = map.addLayer(layer);
+        list.push(layer_obj);
+
     });
     map.on('click',kind, function (e) {
       new mapboxgl.Popup()
@@ -289,11 +290,12 @@ function create_bottoms_layers(map,menu,layer_id,list_layers,filter_layer,status
             for (var j = 0; j < filter_layer.length; j++) {
                 map.setLayoutProperty(filter_layer[j], 'visibility', 'visible');
             };
+            var layer_obj = map.getLayer(filter_layer[0]);
+            //console.log(layer_obj);
             //this.className = 'active';
-            //console.log(map.getBounds());
             //var mbounds = map.getBounds();
             //var lat = [mbounds[LngLat][lng], ]
-            //map.fitBounds(filter_layer[0].getBounds());
+            //map.fitBounds(layer_obj.latLngBounds());
           }
          menu.appendChild(link);
     };
